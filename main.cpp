@@ -10,7 +10,7 @@ struct Rota {
 };
 
 int main() {
-    ifstream in("instancia.txt");
+    ifstream in("instancia_gerada.txt");
     if (!in) {
         cout << "Erro ao abrir o arquivo!\n";
         return 1;
