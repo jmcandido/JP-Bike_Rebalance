@@ -8,9 +8,9 @@ using namespace std;
 int main() {
     srand(time(0));
 
-    int n = 50;     // número de clientes
+    int n = 7;     // número de clientes
     int m = 5;      // número de veículos
-    int Q = 40;     // capacidade
+    int Q = 6;     // capacidade
 
     ofstream out("instancia_gerada.txt");
     if (!out) {
@@ -23,11 +23,12 @@ int main() {
     out << m << "\n";
     out << Q << "\n";
 
-    // demandas aleatórias (1 a 10)
     for (int i = 1; i <= n; i++) {
-        int demanda = rand() % 10 + 1;  
-        out << demanda;
-        if (i < n) out << " ";
+    int valor = rand() % 10 + 1;   // de 1 a 10
+    // sorteia sinal: 0 = negativo, 1 = positivo
+    if (rand() % 2 == 0) valor = -valor;
+    out << valor;
+    if (i < n) out << " ";
     }
     out << "\n";
 

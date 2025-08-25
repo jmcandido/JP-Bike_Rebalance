@@ -24,7 +24,7 @@ int main() {
         in >> d[i]; // lê estações 1..n
     }
 
-    // --- matriz de custos: (n+1)x(n+1) incluindo depósito ---
+    //  matriz de custos: (n+1)x(n+1) incluindo depósito 
     vector<vector<int>> c(n + 1, vector<int>(n + 1));
     for (int i = 0; i <= n; i++) {
         for (int j = 0; j <= n; j++) {
@@ -32,14 +32,13 @@ int main() {
         }
     }
 
-    // --- calcula déficit (opcional: pode começar com carga 0 se preferir) ---
+
     int coletas = 0, entregas = 0;
     for (int i = 1; i <= n; i++) {
         if (d[i] > 0) coletas += d[i];
         else entregas += abs(d[i]);
     }
     int deficit = max(0, entregas - coletas);
-
     // --- visitados (1..n) ---
     vector<bool> visitado(n + 1, false);
 
@@ -50,7 +49,11 @@ int main() {
         // critério de parada: se já cobriu todas as estações
         bool todasVisitadas = true;
         for (int i = 1; i <= n; i++) {
-            if (!visitado[i]) { todasVisitadas = false; break; }
+            if (!visitado[i]) { 
+                todasVisitadas = false; 
+                break; 
+            }
+
         }
         if (todasVisitadas) break;
 
