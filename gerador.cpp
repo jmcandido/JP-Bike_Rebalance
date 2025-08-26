@@ -6,45 +6,40 @@
 using namespace std;
 
 int main() {
-    srand(time(0));
+    srand(time(NULL));
 
-    int n = 7;     // número de clientes
-    int m = 5;      // número de veículos
-    int Q = 6;     // capacidade
+    int n = 50;      // número de clientes
+    int m = 4;        // número de caminhões
+    int Q = 10;       // capacidade de cada caminhão
 
-    ofstream out("instancia_gerada.txt");
-    if (!out) {
-        cerr << "Erro ao criar o arquivo!\n";
-        return 1;
-    }
+    ofstream out("instancia1000.txt");
 
-    // cabeçalho
     out << n << "\n";
     out << m << "\n";
     out << Q << "\n";
 
+    // demandas: mistura de coletas (+) e entregas (-)
     for (int i = 1; i <= n; i++) {
-    int valor = rand() % 10 + 1;   // de 1 a 10
-    // sorteia sinal: 0 = negativo, 1 = positivo
-    if (rand() % 2 == 0) valor = -valor;
-    out << valor;
-    if (i < n) out << " ";
+        int d = (rand() % 10) + 1; // 1..10
+        if (rand() % 2) d = -d;    // metade entrega, metade coleta
+        out << d;
+        if (i < n) out << " ";
     }
     out << "\n";
 
-    // matriz de custos (n+1 x n+1)
+    // matriz de custos simétrica (0..50 aleatório)
     for (int i = 0; i <= n; i++) {
         for (int j = 0; j <= n; j++) {
-            int custo;
-            if (i == j) custo = 0;
-            else custo = rand() % 50 + 5; // custos entre 5 e 55
-            out << custo;
+            int c;
+            if (i == j) c = 0;
+            else c = (rand() % 50) + 1;
+            out << c;
             if (j < n) out << " ";
         }
-        cout << "\n";
+        out << "\n";
     }
 
     out.close();
-    cout << "Arquivo 'instancia_gerada.txt' criado com sucesso!\n";
+    cout << "Instância gerada em instancia1000.txt\n";
     return 0;
 }
