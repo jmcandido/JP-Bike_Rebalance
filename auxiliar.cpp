@@ -31,7 +31,7 @@ bool simularCarga(const vector<int>& caminho, const vector<int>& d, int Q, int c
 }
 
 int main() {
-    ifstream in("instancia.txt");
+    ifstream in("instancia1000.txt");
     if (!in) {
         cout << "Erro ao abrir o arquivo!\n";
         return 1;

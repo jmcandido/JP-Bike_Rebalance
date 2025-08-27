@@ -8,38 +8,46 @@ using namespace std;
 int main() {
     srand(time(NULL));
 
-    int n = 50;      // número de clientes
-    int m = 4;        // número de caminhões
-    int Q = 10;       // capacidade de cada caminhão
+    int n = 1823; 
+    int m = 52;  // número de cliente;    // número de caminhões
+    int Q = 10;   // capacidade de cada caminhão
 
-    ofstream out("instancia1000.txt");
+    ofstream out("instancia.txt");
 
+    // cabeçalho
     out << n << "\n";
     out << m << "\n";
     out << Q << "\n";
 
-    // demandas: mistura de coletas (+) e entregas (-)
+    // === gerar demandas no estilo do professor ===
+    // valores inteiros entre -Q e +Q, exceto 0
     for (int i = 1; i <= n; i++) {
-        int d = (rand() % 10) + 1; // 1..10
-        if (rand() % 2) d = -d;    // metade entrega, metade coleta
+        int d = (rand() % Q) + 1; // 1..Q
+        if (rand() % 2) d = -d;   // metade negativas
         out << d;
         if (i < n) out << " ";
     }
     out << "\n";
 
-    // matriz de custos simétrica (0..50 aleatório)
+    // === gerar matriz de custos simétrica ===
+    vector<vector<int>> c(n+1, vector<int>(n+1, 0));
+    for (int i = 0; i <= n; i++) {
+        for (int j = i+1; j <= n; j++) {
+            int v = (rand() % 50) + 1; // custo entre 1 e 50
+            c[i][j] = c[j][i] = v;
+        }
+    }
+
+    // imprimir matriz
     for (int i = 0; i <= n; i++) {
         for (int j = 0; j <= n; j++) {
-            int c;
-            if (i == j) c = 0;
-            else c = (rand() % 50) + 1;
-            out << c;
+            out << c[i][j];
             if (j < n) out << " ";
         }
         out << "\n";
     }
 
     out.close();
-    cout << "Instância gerada em instancia1000.txt\n";
+    cout << "Instância (versão professor) gerada em instancia.txt\n";
     return 0;
 }
