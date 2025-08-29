@@ -1,0 +1,29 @@
+#ifndef UTILITARIOS_H
+#define UTILITARIOS_H
+
+#include <vector>
+#include <string>
+
+// Estruturas básicas
+struct Rota {
+    std::vector<int> caminho;
+    int custo = 0;
+};
+
+struct Resultado {
+    int custoFinal = 0;
+    std::vector<Rota> rotas;
+};
+
+// Funções utilitárias
+bool lerInstancia(const std::string& nomeArquivo, int &n, int &m, int &Q,  std::vector<int>& d, std::vector<std::vector<int>>& c);
+
+int custoRota(const Rota& r, const std::vector<std::vector<int>>& c);
+
+bool validaRota(const Rota& r, const std::vector<int>& d, int Q);
+
+bool validaResultado(const Resultado& res, const std::vector<int>& d, int Q);
+
+void imprimirResultado(const Resultado& res);
+
+#endif

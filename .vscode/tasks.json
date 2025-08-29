@@ -1,29 +1,22 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: clang++ arquivo de build ativo",
-            "command": "/usr/bin/clang++",
+            "label": "Compilar programa (C++11)",
+            "type": "shell",
+            "command": "g++",
             "args": [
-                "-fcolor-diagnostics",
-                "-fansi-escape-codes",
-                "-g",
-                "${file}",
+                "-std=c++11",
+                "main.cpp",
+                "utilitarios.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
+                "programa"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Tarefa gerada pelo Depurador."
+            "problemMatcher": ["$gcc"]
         }
-    ],
-    "version": "2.0.0"
+    ]
 }

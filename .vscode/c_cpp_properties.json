@@ -1,18 +1,22 @@
 {
   "configurations": [
-    {
-      "name": "macos-clang-arm64",
-      "includePath": [
-        "${workspaceFolder}/**"
-      ],
-      "compilerPath": "/usr/bin/clang",
-      "cStandard": "${default}",
-      "cppStandard": "${default}",
-      "intelliSenseMode": "macos-clang-arm64",
-      "compilerArgs": [
-        ""
-      ]
-    }
+      {
+          "name": "Mac",
+          "includePath": [
+              "${workspaceFolder}/include",
+              "/usr/include",
+              "/usr/local/include"
+          ],
+          "defines": [],
+          "macFrameworkPath": [
+              "/System/Library/Frameworks",
+              "/Library/Frameworks"
+          ],
+          "compilerPath": "/usr/bin/clang++",
+          "cStandard": "c11",
+          "cppStandard": "c++11",
+          "intelliSenseMode": "macos-clang-x64"
+      }
   ],
   "version": 4
 }

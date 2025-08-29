@@ -3,132 +3,116 @@
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+#include "utilitarios.h"
+
 using namespace std;
 
-struct Rota {
-    vector<int> caminho;
-    int custo;
-};
+// Escolhe cliente mais próximo entre candidatos
+int escolherVizinhoMaisProximo(int atual, const vector<int>& candidatos,const vector<vector<int>>& c) {
+    int melhor = candidatos[0];
+    int melhorCusto = c[atual][melhor];
+    for (int j : candidatos) {
+        if (c[atual][j] < melhorCusto) {
+            melhor = j;
+            melhorCusto = c[atual][j];
+        }
+    }
+    return melhor;
+}
 
-int main() {
-    ifstream in("instancia.txt");
-    if (!in) {
-        cout << "Erro ao abrir o arquivo!\n";
-        return 1;
+// Constroi uma rota gulosa
+Rota construirRota(int n, int Q, const vector<int>& d,const vector<vector<int>>& c, vector<char>& visitado) {
+    Rota rota;
+    rota.caminho.push_back(0);
+
+    // calcula entregas e coletas restantes
+    int faltamEntregas = 0;
+    for (int i = 1; i <= n; i++) {
+        if (!visitado[i] && d[i] < 0) 
+            faltamEntregas += -d[i];
     }
 
-    int n, m, Q;
-    in >> n >> m >> Q;
+    // define carga inicial
 
-    // demandas
-    vector<int> d(n + 1);
-    d[0] = 0; // depósito
-    for (int i = 1; i <= n; i++) in >> d[i];
+    int carga = (faltamEntregas > 0 ? min(Q, faltamEntregas) : 0);
 
-    // matriz de custos (n+1)x(n+1)
-    vector<vector<int>> c(n + 1, vector<int>(n + 1));
-    for (int i = 0; i <= n; i++)
-        for (int j = 0; j <= n; j++)
-            in >> c[i][j];
+    if (faltamEntregas > 0){
+         carga = min(Q, faltamEntregas);
+    }else{
+        carga = 0;
+    }
 
-    vector<char> visitado(n+1, 0);
-    vector<Rota> rotas;
+    int atual = 0;
+    int proximo;
+
     vector<int> candidatos;
+    while (true) {
+        candidatos.clear();
+        for (int i = 1; i <= n; i++) {
+            if (visitado[i]) continue;
+            if (d[i] < 0 && carga >= -d[i]) 
+                candidatos.push_back(i);
+            else if (d[i] > 0 && carga + d[i] <= Q) 
+                candidatos.push_back(i);
+        }
+
+        if (candidatos.empty()) {
+            rota.caminho.push_back(0);
+            rota.custo += c[atual][0];
+            break;
+        }
+
+        proximo = escolherVizinhoMaisProximo(atual, candidatos, c);
+        rota.caminho.push_back(proximo);
+        rota.custo += c[atual][proximo];
+        carga += d[proximo];
+        visitado[proximo] = 1;
+        atual = proximo;
+    }
+
+    return rota;
+}
+
+Resultado guloso(int n, int m, int Q, const vector<int>& d, const vector<vector<int>>& c) {
+    Resultado res;
+    vector<char> visitado(n + 1, 0);
 
     for (int k = 0; k < m; k++) {
         bool todasVisitadas = true;
         for (int i = 1; i <= n; i++) {
-            if (!visitado[i]) {
-                 todasVisitadas = false; 
-                 break;
-             }
+            if (!visitado[i]) { todasVisitadas = false; break; }
         }
-        if (todasVisitadas)
-             break;
+        if (todasVisitadas) break;
 
-        Rota rota;
-        rota.custo = 0;
-        rota.caminho.push_back(0); 
-
-        int faltamEntregas = 0, faltamColetas = 0;
-        for (int i = 1; i <= n; i++) {
-            if (visitado[i])
-             continue;
-            if (d[i] < 0)
-                 faltamEntregas += -d[i];
-            else if (d[i] > 0) 
-                faltamColetas += d[i];
-        }
-
-        int carga = 0;
-        if (faltamEntregas > 0) {
-            carga = min(Q, faltamEntregas); // sai carregado
-        } else {
-            carga = 0; // sai vazio
-        }
-
-        int atual = 0;
-
-        while (true) {
-            // clientes viáveis a partir do estado atual
-            candidatos.clear();
-            for (int i = 1; i <= n; i++) {
-                if (visitado[i])
-                 continue;
-                if (d[i] < 0 && carga >= -d[i]) 
-                    candidatos.push_back(i);
-                else if (d[i] > 0 && carga + d[i] <= Q) 
-                    candidatos.push_back(i);
-            }
-
-            if (candidatos.empty()) {
-                rota.caminho.push_back(0);
-                rota.custo += c[atual][0];
-                break;
-            }
-
-            // escolhe cliente mais próximo
-            int melhor = candidatos[0];
-            int melhorCusto = c[atual][melhor];
-            for (int j : candidatos) {
-                if (c[atual][j] < melhorCusto) {
-                    melhor = j;
-                    melhorCusto = c[atual][j];
-                }
-            }
-
-            // atualiza estado
-            rota.caminho.push_back(melhor);
-            rota.custo += c[atual][melhor];
-            carga += d[melhor];
-            visitado[melhor] = 1;
-            atual = melhor;       
-         }
-
-        rotas.push_back(rota);
+        Rota rota = construirRota(n, Q, d, c, visitado);
+        res.rotas.push_back(rota);
+        res.custoFinal += rota.custo;
     }
 
+    // checa se todos foram atendidos
     for (int i = 1; i <= n; i++) {
         if (!visitado[i]) {
             cerr << "Erro: cliente " << i << " não foi atendido!\n";
-            return 1;
+            exit(1);
         }
     }
 
-    int custoTotal = 0;
+    return res;
+}
 
-    for (auto &r : rotas){
-        custoTotal += r.custo;
-    } 
 
-    // saída final
-    cout << custoTotal << "\n";
-    cout << rotas.size() << "\n";
-    for (auto &r : rotas) {
-        for (int idx = 0; idx < (int)r.caminho.size(); idx++) {
-            cout << r.caminho[idx] << (idx+1 < (int)r.caminho.size() ? ' ' : '\n');
-        }
+int main() {
+    int n, m, Q;
+    vector<int> d;
+    vector<vector<int>> c;
+
+    if (!lerInstancia("instancia.txt", n, m, Q, d, c)) {
+        cout << "Erro ao abrir o arquivo!\n";
+        return 1;
     }
+
+    Resultado res = guloso(n, m, Q, d, c);
+    imprimirResultado(res);
 
     return 0;
 }
