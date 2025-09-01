@@ -48,20 +48,20 @@ int custoRota(const Rota& r, const vector<vector<int>>& c) {
 }
 
 bool validaRota(const Rota& r, const vector<int>& d, int Q) {
-    int prefix = 0;
-    int minPrefix = 0;
-    int maxPrefix = 0;
+    int demandas_acumuladas = 0;
+    int min_demanda = 0;
+    int max_demanda = 0;
 
-    for (int v : r.caminho) {
-        prefix += d[v];
-        minPrefix = min(minPrefix, prefix);
-        maxPrefix = max(maxPrefix, prefix);
+    for (int valor : r.caminho) {
+        demandas_acumuladas += d[valor];
+        min_demanda = min(min_demanda, demandas_acumuladas);
+        max_demanda = max(max_demanda, demandas_acumuladas);
     }
 
-    int L = -minPrefix;       // carga mínima necessária para não ficar negativa
-    int U = Q - maxPrefix;    // carga máxima permitida para não estourar Q
+    int minima_viavel = -min_demanda;       // carga mínima necessária para não ficar negativa
+    int maxima_viavel = Q - max_demanda;    // carga máxima permitida para não estourar Q
 
-    return (L <= U);          // existe pelo menos um valor inicial viável
+    return (minima_viavel <= maxima_viavel);          // existe pelo menos um valor inicial viável
 }
 
 // Valida todas as rotas do resultado

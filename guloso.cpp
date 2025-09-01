@@ -16,9 +16,9 @@ int escolherVizinhoMaisProximo(int atual,
     return melhor;
 }
 
-Rota construirRota(int n, int Q, const vector<int>& d,
-                   const vector<vector<int>>& c, vector<bool>& visitado, int &naoVisitados) {
-    Rota rota;
+bool construirRota(int n, int Q, const vector<int>& d,
+                   const vector<vector<int>>& c, vector<bool>& visitado, int &naoVisitados, Rota &rota) {
+    
     rota.custo = 0;
     rota.caminho.push_back(0);
     int atual = 0;
@@ -26,51 +26,39 @@ Rota construirRota(int n, int Q, const vector<int>& d,
     int prox;
     
     while (true) {
-        // monta lista de candidatos não visitados
-        candidatos.clear();
-        for (int i = 1; i <= n; i++) {
-            if (!visitado[i]) {
-                candidatos.push_back(i); // não checa carga aqui
-            }
-        }
+    // monta candidatos
+    candidatos.clear();
 
-        // sem candidatos: fecha rota só se já tiver cliente
-        if (candidatos.empty()) {
-            if (rota.caminho.size() > 1) {
-                rota.caminho.push_back(0);
-                rota.custo += c[atual][0];
-            }
-            break;
-        }
+    for (int i = 1; i <= n; i++){
+        if (!visitado[i]) 
+            candidatos.push_back(i);
+    } 
 
-        // pega o mais próximo (ainda sem checar viabilidade)
+    if (candidatos.empty()) 
+        break;
+
         prox = escolherVizinhoMaisProximo(atual, candidatos, c);
 
-        // testa viabilidade provisoriamente
         rota.caminho.push_back(prox);
-        bool rotaValida = validaRota(rota, d, Q);
-
-        if (rotaValida) {
-            // já está no caminho (do teste) -> só confirma custo e estado
+        if (validaRota(rota, d, Q)) {
             rota.custo += c[atual][prox];
             visitado[prox] = true;
             naoVisitados--;
             atual = prox;
-            // continua o while para tentar inserir mais clientes
         } else {
-            // desfaz o push do teste
             rota.caminho.pop_back();
-
-            // fecha a rota se já tinha algum cliente
-            if (rota.caminho.size() > 1) {
-                rota.caminho.push_back(0);
-                rota.custo += c[atual][0];
-            }
-            break; // encerra construção desta rota
+            break;
         }
     }
 
-    return rota;
+    // fecha rota no fim se tiver cliente
+    if (rota.caminho.size() > 1) {
+        rota.caminho.push_back(0);
+        rota.custo += c[atual][0];
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -83,10 +71,9 @@ Resultado guloso(int n, int m, int Q, const vector<int>& d,
     int naoVisitados = n;
 
     for (int i = 0; i < m && naoVisitados > 0; i++) {
-        Rota rota = construirRota(n, Q, d, c, visitado, naoVisitados);
+        Rota rota;
 
-        // só adiciona se tiver algum cliente
-        if (rota.caminho.size() > 1) {
+        if (construirRota(n, Q, d, c, visitado, naoVisitados, rota)) {
             res.rotas.push_back(rota);
             res.custoFinal += rota.custo;
         }
