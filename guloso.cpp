@@ -17,63 +17,93 @@ int escolherVizinhoMaisProximo(int atual,
 }
 
 Rota construirRota(int n, int Q, const vector<int>& d,
-                   const vector<vector<int>>& c, vector<char>& visitado) {
+                   const vector<vector<int>>& c, vector<bool>& visitado, int &naoVisitados) {
     Rota rota;
+    rota.custo = 0;
     rota.caminho.push_back(0);
-
-    int faltamEntregas = 0;
-    for (int i = 1; i <= n; i++) {
-        if (!visitado[i] && d[i] < 0) 
-            faltamEntregas += -d[i];
-    }
-
-    int carga = (faltamEntregas > 0 ? min(Q, faltamEntregas) : 0);
     int atual = 0;
     vector<int> candidatos;
-
+    int prox;
+    
     while (true) {
+        // monta lista de candidatos não visitados
         candidatos.clear();
         for (int i = 1; i <= n; i++) {
-            if (visitado[i]) continue;
-            if (d[i] < 0 && carga >= -d[i]) 
-                candidatos.push_back(i);
-            else if (d[i] > 0 && carga + d[i] <= Q) 
-                candidatos.push_back(i);
+            if (!visitado[i]) {
+                candidatos.push_back(i); // não checa carga aqui
+            }
         }
 
+        // sem candidatos: fecha rota só se já tiver cliente
         if (candidatos.empty()) {
-            rota.caminho.push_back(0);
-            rota.custo += c[atual][0];
+            if (rota.caminho.size() > 1) {
+                rota.caminho.push_back(0);
+                rota.custo += c[atual][0];
+            }
             break;
         }
 
-        int prox = escolherVizinhoMaisProximo(atual, candidatos, c);
+        // pega o mais próximo (ainda sem checar viabilidade)
+        prox = escolherVizinhoMaisProximo(atual, candidatos, c);
+
+        // testa viabilidade provisoriamente
         rota.caminho.push_back(prox);
-        rota.custo += c[atual][prox];
-        carga += d[prox];
-        visitado[prox] = 1;
-        atual = prox;
+        bool rotaValida = validaRota(rota, d, Q);
+
+        if (rotaValida) {
+            // já está no caminho (do teste) -> só confirma custo e estado
+            rota.custo += c[atual][prox];
+            visitado[prox] = true;
+            naoVisitados--;
+            atual = prox;
+            // continua o while para tentar inserir mais clientes
+        } else {
+            // desfaz o push do teste
+            rota.caminho.pop_back();
+
+            // fecha a rota se já tinha algum cliente
+            if (rota.caminho.size() > 1) {
+                rota.caminho.push_back(0);
+                rota.custo += c[atual][0];
+            }
+            break; // encerra construção desta rota
+        }
     }
 
     return rota;
 }
 
+
+
 Resultado guloso(int n, int m, int Q, const vector<int>& d,
                  const vector<vector<int>>& c) {
     Resultado res;
-    vector<char> visitado(n + 1, 0);
+    
+    vector<bool> visitado(n + 1, false);
+    int naoVisitados = n;
 
-    for (int k = 0; k < m; k++) {
-        bool todasVisitadas = true;
-        for (int i = 1; i <= n; i++) {
-            if (!visitado[i]) { todasVisitadas = false; break; }
+    for (int i = 0; i < m && naoVisitados > 0; i++) {
+        Rota rota = construirRota(n, Q, d, c, visitado, naoVisitados);
+
+        // só adiciona se tiver algum cliente
+        if (rota.caminho.size() > 1) {
+            res.rotas.push_back(rota);
+            res.custoFinal += rota.custo;
         }
-        if (todasVisitadas) break;
+    }
 
-        Rota rota = construirRota(n, Q, d, c, visitado);
-        res.rotas.push_back(rota);
-        res.custoFinal += rota.custo;
+    if (naoVisitados > 0) {
+        cout << "[AVISO] " << naoVisitados 
+             << " clientes não foram atendidos pelo guloso." << endl;
+        
+        // opcional: listar quais clientes ficaram de fora
+        cout << "Clientes não atendidos: ";
+        for (int i = 1; i <= n; i++) {
+            if (!visitado[i]) cout << i << " ";
+        }
+        cout << endl;
     }
 
     return res;
 }
+

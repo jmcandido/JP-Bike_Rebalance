@@ -11,13 +11,29 @@ bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q,
 
     in >> n >> m >> Q;
 
-    d.assign(n + 1, 0);
+    d.resize(n + 1);
+    d[0] = 0;
     for (int i = 1; i <= n; i++) in >> d[i];
 
-    c.assign(n + 1, vector<int>(n + 1));
+    c.resize(n + 1, vector<int>(n + 1));
     for (int i = 0; i <= n; i++)
         for (int j = 0; j <= n; j++)
             in >> c[i][j];
+
+    return true;
+}
+// Grava solução em arquivo
+bool gravarResultado(const string& nomeArquivo, const Resultado& res) {
+    ofstream out(nomeArquivo);
+    if (!out) return false;
+
+    out << res.custoFinal << "\n";
+    out << res.rotas.size() << "\n";
+    for (auto &r : res.rotas) {
+        for (int i = 0; i < (int)r.caminho.size(); i++) {
+            out << r.caminho[i] << (i+1 < (int)r.caminho.size() ? ' ' : '\n');
+        }
+    }
 
     return true;
 }
@@ -31,15 +47,21 @@ int custoRota(const Rota& r, const vector<vector<int>>& c) {
     return custo;
 }
 
-// Valida se uma rota respeita capacidade
 bool validaRota(const Rota& r, const vector<int>& d, int Q) {
-    int carga = 0;
+    int prefix = 0;
+    int minPrefix = 0;
+    int maxPrefix = 0;
+
     for (int v : r.caminho) {
-        carga += d[v];
-        if (carga < 0 || carga > Q) 
-        return false;
+        prefix += d[v];
+        minPrefix = min(minPrefix, prefix);
+        maxPrefix = max(maxPrefix, prefix);
     }
-    return true;
+
+    int L = -minPrefix;       // carga mínima necessária para não ficar negativa
+    int U = Q - maxPrefix;    // carga máxima permitida para não estourar Q
+
+    return (L <= U);          // existe pelo menos um valor inicial viável
 }
 
 // Valida todas as rotas do resultado

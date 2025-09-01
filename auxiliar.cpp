@@ -15,27 +15,44 @@ int main() {
     }
 
     cout << "Capacidade Q = " << Q << "\n";
-    cout << "Digite uma rota (sequência de vértices terminada em -1):\n";
+    cout << "Digite as rotas manualmente.\n";
+    cout << "Formato: comece sempre com 0 (depósito).\n";
+    cout << "Quando voltar ao depósito (0), a rota é fechada.\n";
+    cout << "Digite -1 quando não houver mais rotas.\n\n";
 
-    Rota rota;
-    int cliente;
-    while (cin >> cliente && cliente != -1) {
-        rota.caminho.push_back(cliente);
+    vector<Rota> rotas;
+    while (true) {
+        Rota rota;
+        int cliente;
+        cout << "Rota " << rotas.size() << ": ";
+        while (cin >> cliente) {
+            if (cliente == -1) goto fim;   // termina tudo
+            rota.caminho.push_back(cliente);
+            if (cliente == 0 && rota.caminho.size() > 1) break; // rota fechada
+        }
+        if (!rota.caminho.empty()) {
+            rota.custo = custoRota(rota, c);
+            rotas.push_back(rota);
+        }
     }
 
-    // calcula custo
-    rota.custo = custoRota(rota, c);
+fim:
+    int custoTotal = 0;
+    cout << "\n=== Rotas informadas ===\n";
+    for (int i = 0; i < (int)rotas.size(); i++) {
+        Rota& r = rotas[i];
+        bool ok = validaRota(r, d, Q);
 
-    // valida factibilidade
-    bool ok = validaRota(rota, d, Q);
+        cout << "Rota " << i << ": ";
+        for (int v : r.caminho) cout << v << " ";
+        cout << "\n";
+        cout << "  custo = " << r.custo;
+        cout << " | " << (ok ? "✅ viável" : "❌ inviável") << "\n";
 
-    // saída
-    cout << "\nRota testada: ";
-    for (int v : rota.caminho) cout << v << " ";
-    cout << "\n";
+        custoTotal += r.custo;
+    }
 
-    cout << "Custo da rota = " << rota.custo << "\n";
-    cout << "Rota " << (ok ? "✅ viável" : "❌ inviável") << "\n";
+    cout << "\nCusto total da solução = " << custoTotal << "\n";
 
     return 0;
 }

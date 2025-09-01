@@ -9,7 +9,7 @@ int escolherVizinhoMaisProximo(int atual,
 
 Rota construirRota(int n, int Q, const std::vector<int>& d,
                    const std::vector<std::vector<int>>& c, 
-                   std::vector<char>& visitado);
+                   std::vector<bool>& visitado, int &naoVisitados);
 
 Resultado guloso(int n, int m, int Q, 
                  const std::vector<int>& d,

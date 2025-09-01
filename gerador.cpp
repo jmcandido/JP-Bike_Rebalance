@@ -8,8 +8,8 @@ using namespace std;
 int main() {
     srand(time(NULL));
 
-    int n = 10; 
-    int m = 10;  // número de cliente;    // número de caminhões
+    int n = 7; 
+    int m = 4;  // número de cliente;    // número de caminhões
     int Q = 10;   // capacidade de cada caminhão
 
     ofstream out("instancia.txt");
