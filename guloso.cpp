@@ -37,6 +37,7 @@ bool construirRota(int n, int Q, const vector<int>& d,
     if (candidatos.empty()) 
         break;
 
+        cout << endl;
         prox = escolherVizinhoMaisProximo(atual, candidatos, c);
 
         rota.caminho.push_back(prox);
@@ -65,6 +66,7 @@ bool construirRota(int n, int Q, const vector<int>& d,
 
 Resultado guloso(int n, int m, int Q, const vector<int>& d,
                  const vector<vector<int>>& c) {
+                    
     Resultado res;
     
     vector<bool> visitado(n + 1, false);
@@ -90,7 +92,7 @@ Resultado guloso(int n, int m, int Q, const vector<int>& d,
         }
         cout << endl;
     }
-
+    
     return res;
 }
 

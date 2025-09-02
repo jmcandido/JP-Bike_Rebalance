@@ -41,7 +41,7 @@ bool gravarResultado(const string& nomeArquivo, const Resultado& res) {
 // Recalcula o custo de uma rota
 int custoRota(const Rota& r, const vector<vector<int>>& c) {
     int custo = 0;
-    for (int i = 0; i + 1 < (int)r.caminho.size(); i++) {
+    for (int i = 0; i + 1 < r.caminho.size(); i++) {
         custo += c[r.caminho[i]][r.caminho[i+1]];
     }
     return custo;
@@ -58,10 +58,13 @@ bool validaRota(const Rota& r, const vector<int>& d, int Q) {
         max_demanda = max(max_demanda, demandas_acumuladas);
     }
 
+
     int minima_viavel = -min_demanda;       // carga mínima necessária para não ficar negativa
     int maxima_viavel = Q - max_demanda;    // carga máxima permitida para não estourar Q
 
-    return (minima_viavel <= maxima_viavel);          // existe pelo menos um valor inicial viável
+    return (minima_viavel <= maxima_viavel);  
+    
+    // existe pelo menos um valor inicial viável
 }
 
 // Valida todas as rotas do resultado
