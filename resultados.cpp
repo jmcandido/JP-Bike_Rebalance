@@ -1,7 +1,5 @@
-#include "utilitarios.h"
+#include "resultados.h"
 #include <fstream>
-#include <iostream>
-using namespace std;
 
 // Lê instância do arquivo
 bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, 
@@ -27,8 +25,8 @@ bool gravarResultado(const string& nomeArquivo, const Resultado& res) {
     ofstream out(nomeArquivo);
     if (!out) return false;
 
-    out << res.custoFinal << "\n";
-    out << res.rotas.size() << "\n";
+    out << res.custoFinal << endl;
+    out << res.rotas.size() << endl;
     for (auto &r : res.rotas) {
         for (int i = 0; i < (int)r.caminho.size(); i++) {
             out << r.caminho[i] << (i+1 < (int)r.caminho.size() ? ' ' : '\n');
@@ -67,22 +65,13 @@ bool validaRota(const Rota& r, const vector<int>& d, int Q) {
     // existe pelo menos um valor inicial viável
 }
 
-// Valida todas as rotas do resultado
-bool validaResultado(const Resultado& res, const vector<int>& d, int Q) {
-    for (auto &r : res.rotas) {
-        if (!validaRota(r, d, Q))
-         return false;
-    }
-    return true;
-}
-
 // Imprime solução
 void imprimirResultado(const Resultado& res) {
-    cout << res.custoFinal << "\n";
-    cout << res.rotas.size() << "\n";
-    for (auto &r : res.rotas) {
+    cout << res.custoFinal << endl;
+    cout << res.rotas.size() << endl;
+    for (const Rota &r : res.rotas) {
         for (int i = 0; i < (int)r.caminho.size(); i++) {
-            cout << r.caminho[i] << (i+1 < (int)r.caminho.size() ? ' ' : '\n');
+            cout << r.caminho[i] << (i+1 < r.caminho.size() ? ' ' : '\n');
         }
     }
 }

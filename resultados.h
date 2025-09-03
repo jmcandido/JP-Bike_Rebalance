@@ -1,5 +1,5 @@
-#ifndef UTILITARIOS_H
-#define UTILITARIOS_H
+#ifndef RESULTADOS_H
+#define RESULTADOS_H
 
 #include <vector>
 #include <string>
@@ -18,8 +18,6 @@ struct Resultado {
 };
 
 
-
-// Funções utilitárias
 bool lerInstancia(const std::string& nomeArquivo, int &n, int &m, int &Q,  std::vector<int>& d, std::vector<std::vector<int>>& c);
 
 int custoRota(const Rota& r, const std::vector<std::vector<int>>& c);

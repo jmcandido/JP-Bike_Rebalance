@@ -1,27 +1,34 @@
-#include "utilitarios.h"
+#include "resultados.h"
 #include "guloso.h"
 #include "vnd.h"
-#include <iostream>
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    if (argc < 2) {
+        return -1;
+    }
+
+    string instancia = argv[1];
+
     int n, m, Q;
     vector<int> d;
     vector<vector<int>> c;
 
+
     // leitura da instância
-    if (!lerInstancia("instancias/n12_q20.txt", n, m, Q, d, c)) {
+    if (!lerInstancia(instancia, n, m, Q, d, c)) {
         cerr << "Erro ao abrir instancia!\n";
-        return 1;
+        return -1;
     }
 
-    // solução inicial (guloso)
+    // solução inicial 
     Resultado solucao = guloso(n, m, Q, d, c);
 
     cout << "Solução inicial:" << endl;
-    imprimirResultado(solucao);
-    
+    imprimirResultado(solucao);    
 
-    // loop VND
+    //vnd
+
     int k = 1;
     int vizinhancas = 1; 
 
@@ -30,7 +37,7 @@ int main() {
 
         switch (k) {
             case 1:
-                melhorou = aplicarSwap(solucao, d, c, Q); // intra-rota
+                //melhorou = aplicarSwap(solucao, d, c, Q); // intra-rota
                 break;
         }
 
@@ -42,7 +49,7 @@ int main() {
         }
     }
 
-    cout << "\nSolução final após VND:" << endl;
+    cout << "\nSolução após VND:" << endl;
     imprimirResultado(solucao);
 
     gravarResultado("saida.txt", solucao);

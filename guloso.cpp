@@ -37,7 +37,6 @@ bool construirRota(int n, int Q, const vector<int>& d,
     if (candidatos.empty()) 
         break;
 
-        cout << endl;
         prox = escolherVizinhoMaisProximo(atual, candidatos, c);
 
         rota.caminho.push_back(prox);
@@ -82,11 +81,6 @@ Resultado guloso(int n, int m, int Q, const vector<int>& d,
     }
 
     if (naoVisitados > 0) {
-        cout << "[AVISO] " << naoVisitados 
-             << " clientes não foram atendidos pelo guloso." << endl;
-        
-        // opcional: listar quais clientes ficaram de fora
-        cout << "Clientes não atendidos: ";
         for (int i = 1; i <= n; i++) {
             if (!visitado[i]) cout << i << " ";
         }
