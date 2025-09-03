@@ -10,6 +10,7 @@ using namespace std;
 struct Rota {
    vector<int> caminho;
    int custo = 0;
+   int id;
 };
 
 struct Resultado {
@@ -26,7 +27,8 @@ bool validaRota(const Rota& r, const std::vector<int>& d, int Q);
 
 void imprimirResultado(const Resultado& res);
 
-bool gravarResultado(const string& nomeArquivo, const Resultado& res);
+void gravaResultado(const string& pasta, const string& instancia, const Resultado& res);
+
 #endif
 
 

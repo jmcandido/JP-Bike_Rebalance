@@ -21,20 +21,31 @@ bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q,
     return true;
 }
 // Grava solução em arquivo
-bool gravarResultado(const string& nomeArquivo, const Resultado& res) {
-    ofstream out(nomeArquivo);
-    if (!out) return false;
+void gravaResultado(const string& pasta, const string& instancia, const Resultado& res) {
+    // extrai só o nome-base da instância
+    string nomeBase = instancia.substr(instancia.find_last_of("/\\") + 1);
+    string caminho = pasta + "/" + nomeBase;
 
-    out << res.custoFinal << endl;
-    out << res.rotas.size() << endl;
-    for (auto &r : res.rotas) {
+    ofstream arquivo(caminho);
+    if (!arquivo.is_open()) {
+        cout << "Erro ao abrir o arquivo para escrita." << endl;
+        return;
+    }
+
+    // grava custos gerais
+    arquivo << res.custoFinal << endl;
+    arquivo << res.rotas.size() << endl;
+
+    // grava cada rota
+    for (const auto& r : res.rotas) {
         for (int i = 0; i < (int)r.caminho.size(); i++) {
-            out << r.caminho[i] << (i+1 < (int)r.caminho.size() ? ' ' : '\n');
+            arquivo << r.caminho[i] << (i + 1 < (int)r.caminho.size() ? ' ' : '\n');
         }
     }
 
-    return true;
+    arquivo.close();
 }
+
 
 // Recalcula o custo de uma rota
 int custoRota(const Rota& r, const vector<vector<int>>& c) {

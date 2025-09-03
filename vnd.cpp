@@ -3,17 +3,21 @@
 
 bool aplicarSwap(Resultado& solucao,const vector<int>& d,const vector<vector<int>>& c,int Q) {
     bool melhorou = false;
-    for (int i = 0 ; i < solucao.rotas.size(); i++) {
+    for (int r = 0 ; r < solucao.rotas.size(); r++) {
 
-        Rota &rota = solucao.rotas[i];
+        Rota &rota = solucao.rotas[r];
+
+        cout << "Analisando rota " << r << " (caminho: ";
+        for (int v : rota.caminho) cout << v << " ";
+        cout << ") | custo atual=" << rota.custo << endl;
+
         int melhorCusto = rota.custo;
         int melhor_i = -1, melhor_j = -1;
 
         for (int i = 1; i < rota.caminho.size() - 2; i++) {
             for (int j = i + 1; j < rota.caminho.size() - 1; j++) {
-                cout << "Testando i = " << i << " j = " << j << endl << endl;
+                cout << "Testando estacao  " << rota.caminho[i]  << " e " << rota.caminho[j]  << " (" << i << "," << j << ")" << endl << endl;
                 swap(rota.caminho[i], rota.caminho[j]);
-
                 if (validaRota(rota, d, Q)) {
                     int novoCusto = custoRota(rota, c);
                     cout << "custo atual: " << novoCusto << endl;
@@ -23,7 +27,10 @@ bool aplicarSwap(Resultado& solucao,const vector<int>& d,const vector<vector<int
                         melhor_i = i;
                         melhor_j= j;
                     }
+                }else{
+                    cout << "rota invalida" << endl;
                 }
+
                 swap(rota.caminho[i], rota.caminho[j]);
             }
         }

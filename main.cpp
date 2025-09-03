@@ -25,6 +25,7 @@ int main(int argc, char* argv[]) {
     Resultado solucao = guloso(n, m, Q, d, c);
 
     cout << "Solução inicial:" << endl;
+    gravaResultado("resultados/guloso",instancia,solucao);
     imprimirResultado(solucao);    
 
     //vnd
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]) {
 
         switch (k) {
             case 1:
-                //melhorou = aplicarSwap(solucao, d, c, Q); // intra-rota
+                melhorou = aplicarSwap(solucao, d, c, Q); // intra-rota
                 break;
         }
 
@@ -51,8 +52,7 @@ int main(int argc, char* argv[]) {
 
     cout << "\nSolução após VND:" << endl;
     imprimirResultado(solucao);
-
-    gravarResultado("saida.txt", solucao);
+    gravaResultado("resultados/vnd",instancia, solucao);
 
     return 0;
 }

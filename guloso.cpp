@@ -5,6 +5,7 @@ using namespace std;
 int escolherVizinhoMaisProximo(int atual, 
                                const vector<int>& candidatos,
                                const vector<vector<int>>& c) {
+    
     int melhor = candidatos[0];
     int melhorCusto = c[atual][melhor];
     for (int j : candidatos) {
@@ -17,41 +18,46 @@ int escolherVizinhoMaisProximo(int atual,
 }
 
 bool construirRota(int n, int Q, const vector<int>& d,
-                   const vector<vector<int>>& c, vector<bool>& visitado, int &naoVisitados, Rota &rota) {
+                   const vector<vector<int>>& c, vector<bool>& visitado,
+                   int &naoVisitados, Rota &rota) {
     
     rota.custo = 0;
-    rota.caminho.push_back(0);
+    rota.caminho.push_back(0); // começa no depósito
+    vector<int> candidatos_viaveis;
     int atual = 0;
-    vector<int> candidatos;
-    int prox;
-    
+
     while (true) {
-    // monta candidatos
-    candidatos.clear();
+       
+        candidatos_viaveis.clear();
 
-    for (int i = 1; i <= n; i++){
-        if (!visitado[i]) 
-            candidatos.push_back(i);
-    } 
+        // monta lista de candidatos viáveis
+        for (int i = 1; i <= n; i++) {
+            if (visitado[i]) 
+                continue;
 
-    if (candidatos.empty()) 
-        break;
+            rota.caminho.push_back(i);
 
-        prox = escolherVizinhoMaisProximo(atual, candidatos, c);
-
-        rota.caminho.push_back(prox);
-        if (validaRota(rota, d, Q)) {
-            rota.custo += c[atual][prox];
-            visitado[prox] = true;
-            naoVisitados--;
-            atual = prox;
-        } else {
+            if(validaRota(rota, d, Q))
+                candidatos_viaveis.push_back(i);
+    
             rota.caminho.pop_back();
-            break;
         }
+
+        if (candidatos_viaveis.empty())
+             break;
+
+        // escolhe o vizinho mais próximo entre os viáveis
+        int prox = escolherVizinhoMaisProximo(atual, candidatos_viaveis, c);
+
+        // adiciona o cliente escolhido
+        rota.caminho.push_back(prox);
+        rota.custo += c[atual][prox];
+        visitado[prox] = true;
+        naoVisitados--;
+        atual = prox;
     }
 
-    // fecha rota no fim se tiver cliente
+    // fecha rota no depósito, se tiver clientes
     if (rota.caminho.size() > 1) {
         rota.caminho.push_back(0);
         rota.custo += c[atual][0];
@@ -60,7 +66,6 @@ bool construirRota(int n, int Q, const vector<int>& d,
 
     return false;
 }
-
 
 
 Resultado guloso(int n, int m, int Q, const vector<int>& d,
