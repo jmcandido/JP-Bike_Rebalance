@@ -31,14 +31,17 @@ int main(int argc, char* argv[]) {
     //vnd
 
     int k = 1;
-    int vizinhancas = 1; 
+    int vizinhancas = 2; 
 
     while (k <= vizinhancas) {
         bool melhorou = false;
 
         switch (k) {
             case 1:
-                melhorou = aplicarSwap(solucao, d, c, Q); // intra-rota
+                melhorou = aplicarSwapInterRotas(solucao, d, c, Q); // intra-rota
+                break;
+            case 2:
+                melhorou = aplicarSwap(solucao, d, c, Q);
                 break;
         }
 

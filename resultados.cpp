@@ -2,8 +2,7 @@
 #include <fstream>
 
 // Lê instância do arquivo
-bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, 
-                  vector<int>& d, vector<vector<int>>& c) {
+bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, vector<int>& d, vector<vector<int>>& c) {
     ifstream in(nomeArquivo);
     if (!in) return false;
 
@@ -21,7 +20,7 @@ bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q,
     return true;
 }
 // Grava solução em arquivo
-void gravaResultado(const string& pasta, const string& instancia, const Resultado& res) {
+ void gravaResultado(const string& pasta, const string& instancia, const Resultado& res) {
     // extrai só o nome-base da instância
     string nomeBase = instancia.substr(instancia.find_last_of("/\\") + 1);
     string caminho = pasta + "/" + nomeBase;

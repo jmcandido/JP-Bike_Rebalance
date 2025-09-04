@@ -68,8 +68,7 @@ bool construirRota(int n, int Q, const vector<int>& d,
 }
 
 
-Resultado guloso(int n, int m, int Q, const vector<int>& d,
-                 const vector<vector<int>>& c) {
+Resultado guloso(int n, int m, int Q, const vector<int>& d,const vector<vector<int>>& c) {
                     
     Resultado res;
     
