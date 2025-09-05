@@ -1,6 +1,7 @@
 #include "resultados.h"
 #include "guloso.h"
 #include "vnd.h"
+#include <chrono>
 
 int main(int argc, char* argv[]) {
 
@@ -21,12 +22,15 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+     auto inicio = std::chrono::high_resolution_clock::now();
+
+
     // solução inicial 
     Resultado solucao = guloso(n, m, Q, d, c);
 
     cout << "Solução inicial:" << endl;
     gravaResultado("resultados/guloso",instancia,solucao);
-    imprimirResultado(solucao);    
+    //imprimirResultado(solucao);    
 
     //vnd
 
@@ -36,26 +40,34 @@ int main(int argc, char* argv[]) {
     while (k <= vizinhancas) {
         bool melhorou = false;
 
+        cout << "k = " << k << endl;
+
         switch (k) {
             case 1:
-                melhorou = aplicarSwapInterRotas(solucao, d, c, Q); // intra-rota
+                melhorou = aplicarSwap(solucao, d, c, Q); 
                 break;
             case 2:
-                melhorou = aplicarSwap(solucao, d, c, Q);
+                melhorou = aplicarSwapInterRotas(solucao, d, c, Q);
                 break;
         }
 
         if (melhorou) {
-            cout << "Melhoria encontrada na vizinhança " << k << endl;
+            //cout << "Melhoria encontrada na vizinhança " << k << endl;
             k = 1; // volta para a primeira vizinhança
         } else {
-            k++;   // vai para a próxima vizinhança
+            k++;   // vai para a próxima vizinhança 17440 ms   1241
         }
     }
 
     cout << "\nSolução após VND:" << endl;
     imprimirResultado(solucao);
     gravaResultado("resultados/vnd",instancia, solucao);
+
+    auto fim = std::chrono::high_resolution_clock::now();
+
+    // calcula duração em ms
+    auto duracao = std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio);
+    cout << "\nTempo total de execução: " << duracao.count() << " ms" << endl;
 
     return 0;
 }

@@ -3,12 +3,12 @@
 using namespace std;
 
 int escolherVizinhoMaisProximo(int atual, 
-                               const vector<int>& candidatos,
+                               const vector<int>& candidatos_viaveis,
                                const vector<vector<int>>& c) {
     
-    int melhor = candidatos[0];
+    int melhor = candidatos_viaveis[0];
     int melhorCusto = c[atual][melhor];
-    for (int j : candidatos) {
+    for (int j : candidatos_viaveis) {
         if (c[atual][j] < melhorCusto) {
             melhor = j;
             melhorCusto = c[atual][j];
