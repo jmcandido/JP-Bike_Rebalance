@@ -97,6 +97,17 @@ int main(int argc, char* argv[]) {
         rotas.back().caminho.push_back(0);
     }
 
-    for (const Rota& r : rotas) simularRota(r, d, Q,c);
-    return 0;
+    int custoTotal = 0;
+
+    for (const Rota& r : rotas) {
+        simularRota(r, d, Q, c);
+        custoTotal += custoRota(r, c);
+    }
+
+    cout << "\n=== Resumo Geral ===\n";
+    cout << "Total de rotas: " << rotas.size() << "\n";
+    cout << "Custo total das rotas: " << custoTotal << "\n";
+
+return 0;
+
 }

@@ -45,7 +45,6 @@ bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, vector<int>
     arquivo.close();
 }
 
-
 // Recalcula o custo de uma rota
 int custoRota(const Rota& r, const vector<vector<int>>& c) {
     int custo = 0;
@@ -74,8 +73,8 @@ bool validaRota(const Rota& r, const vector<int>& d, int Q) {
     
     // existe pelo menos um valor inicial viável
 }
-
 // Imprime solução
+
 void imprimirResultado(const Resultado& res) {
     cout << res.custoFinal << endl;
     cout << res.rotas.size() << endl;

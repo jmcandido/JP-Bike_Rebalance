@@ -9,7 +9,7 @@ int main() {
     srand(time(NULL));
 
     int n = 1000;      // número de clientes
-    int m = 5000;        // número de caminhões
+    int m = 1000;        // número de caminhões
     int Q = 30;       // capacidade de cada caminhão
 
     ofstream out("instancia1000.txt");

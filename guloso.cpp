@@ -2,9 +2,7 @@
 #include <iostream>
 using namespace std;
 
-int escolherVizinhoMaisProximo(int atual, 
-                               const vector<int>& candidatos_viaveis,
-                               const vector<vector<int>>& c) {
+int escolherVizinhoMaisProximo(int atual, const vector<int>& candidatos_viaveis,const vector<vector<int>>& c) {
     
     int melhor = candidatos_viaveis[0];
     int melhorCusto = c[atual][melhor];

@@ -30,12 +30,12 @@ int main(int argc, char* argv[]) {
 
     cout << "Solução inicial:" << endl;
     gravaResultado("resultados/guloso",instancia,solucao);
-    //imprimirResultado(solucao);    
+    imprimirResultado(solucao);    
 
     //vnd
 
     int k = 1;
-    int vizinhancas = 2; 
+    int vizinhancas = 3; 
 
     while (k <= vizinhancas) {
         bool melhorou = false;
@@ -47,7 +47,10 @@ int main(int argc, char* argv[]) {
                 melhorou = aplicarSwap(solucao, d, c, Q); 
                 break;
             case 2:
-                melhorou = aplicarSwapInterRotas(solucao, d, c, Q);
+                melhorou = aplicarRelocate(solucao, d, c, Q);
+                break;
+            case 3:
+                melhorou = aplicarSwapInterRotas(solucao,d,c,Q);
                 break;
         }
 

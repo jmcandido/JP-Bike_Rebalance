@@ -18,7 +18,6 @@ struct Resultado {
     vector<Rota> rotas;
 };
 
-
 bool lerInstancia(const std::string& nomeArquivo, int &n, int &m, int &Q,  std::vector<int>& d, std::vector<std::vector<int>>& c);
 
 int custoRota(const Rota& r, const std::vector<std::vector<int>>& c);
