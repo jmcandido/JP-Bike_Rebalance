@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 
         switch (k) {
             case 1:
-                melhorou = aplicarSwap(solucao, d, c, Q); 
+                melhorou = aplicarSwapGeral(solucao, d, c, Q); 
                 break;
             case 2:
                 melhorou = aplicarRelocate(solucao,d,c,Q);
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
                 melhorou = aplicarRelocateInter(solucao, d, c, Q);
                 break;
             case 4:
-                melhorou = aplicarSwapInterRotas(solucao,d,c,Q);
+                melhorou = aplicarSwapInterRotasGeral(solucao,d,c,Q);
                 break;
         }
 
