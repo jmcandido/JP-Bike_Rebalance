@@ -283,145 +283,49 @@ bool aplicarSwapInterRotas(Resultado& solucao, const vector<int>& d, const vecto
     return melhorou;
 }
 
-
-// Move 1 cliente de uma rota para outra (somente INTER-rotas) – best move, sem cópias
-// bool aplicarRelocate(Resultado& solucao,
-//                      const vector<int>& d,
-//                      const vector<vector<int>>& c,
-//                      int Q)
-// {
-//     int best_r1 = -1, best_i = -1;     // origem e índice do cliente
-//     int best_r2 = -1, best_j = -1;     // destino e aresta (inserir entre j e j+1)
-//     int melhorDelta = 0;               // delta < 0 é melhoria
-
-//     // varre pares de rotas
-//     for (int r1 = 0; r1 < (int)solucao.rotas.size(); ++r1) {
-//         for (int r2 = 0; r2 < (int)solucao.rotas.size(); ++r2) {
-//             if (r1 == r2) continue; // aqui só inter-rotas
-
-//             Rota &rota1 = solucao.rotas[r1];
-//             Rota &rota2 = solucao.rotas[r2];
-
-//             const int L1 = (int)rota1.caminho.size();
-//             const int L2 = (int)rota2.caminho.size();
-//             if (L1 <= 3) continue;  // rota1 precisa ter pelo menos 1 cliente
-
-//             // percorre cada cliente B de rota1 (sem depósitos)
-//             for (int i = 1; i < L1 - 1; ++i) {
-//                 int A = rota1.caminho[i - 1];
-//                 int B = rota1.caminho[i];
-//                 int C = rota1.caminho[i + 1];
-
-//                 // delta de REMOVER B de rota1: (A-B-C) -> (A-C)
-//                 int deltaRemove = c[A][C] - (c[A][B] + c[B][C]);
-
-//                 // tenta inserir B em cada aresta (X-Y) de rota2
-//                 for (int j = 0; j < L2 - 1; ++j) {
-//                     int X = rota2.caminho[j];
-//                     int Y = rota2.caminho[j + 1];
-
-//                     // delta de INSERIR B entre (X-Y): (X-Y) -> (X-B-Y)
-//                     int deltaInsert = (c[X][B] + c[B][Y]) - c[X][Y];
-//                     int delta = deltaRemove + deltaInsert;
-//                     if (delta >= 0) continue; // só consideramos melhoria
-
-//                     // ---- APLICA TEMPORÁRIO (sem cópias) ----
-//                     // guardar B e executar move
-//                     int cliente = B;
-//                     rota1.caminho.erase(rota1.caminho.begin() + i);
-//                     rota2.caminho.insert(rota2.caminho.begin() + (j + 1), cliente);
-
-//                     bool ok = validaRota(rota1, d, Q) && validaRota(rota2, d, Q);
-
-//                     // ---- ROLLBACK imediato ----
-//                     rota2.caminho.erase(rota2.caminho.begin() + (j + 1));
-//                     rota1.caminho.insert(rota1.caminho.begin() + i, cliente);
-
-//                     if (!ok) continue;
-
-//                     if (delta < melhorDelta) {
-//                         melhorDelta = delta;
-//                         best_r1 = r1; best_i = i;
-//                         best_r2 = r2; best_j = j;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-//     // aplica o melhor movimento encontrado (uma única vez)
-//     if (best_r1 != -1) {
-//         Rota &rOrig = solucao.rotas[best_r1];
-//         Rota &rDest = solucao.rotas[best_r2];
-
-//         int A = rOrig.caminho[best_i - 1];
-//         int B = rOrig.caminho[best_i];
-//         int C = rOrig.caminho[best_i + 1];
-
-//         int X = rDest.caminho[best_j];
-//         int Y = rDest.caminho[best_j + 1];
-
-//         int deltaRemove = c[A][C] - (c[A][B] + c[B][C]);
-//         int deltaInsert = (c[X][B] + c[B][Y]) - c[X][Y];
-//         int delta = deltaRemove + deltaInsert; // < 0
-
-//         // aplica definitivo
-//         rOrig.caminho.erase(rOrig.caminho.begin() + best_i);
-//         rDest.caminho.insert(rDest.caminho.begin() + (best_j + 1), B);
-
-//         // atualiza custos incrementalmente (sem recomputar a rota inteira)
-//         rOrig.custo += deltaRemove;
-//         rDest.custo += deltaInsert;
-//         solucao.custoFinal += delta;
-
-//         return true;
-//     }
-
-//     return false; // nenhuma melhoria
-// }
-
-
-bool aplicarRelocate(Resultado& solucao,const vector<int>& d, const vector<vector<int>>& c, int Q){
+bool aplicarRelocateInter(Resultado& solucao,const vector<int>& d, const vector<vector<int>>& c, int Q){
     int melhor_r1 = -1,melhor_i = -1;
     int melhor_r2 = -1, melhor_j = -1;
     int melhorValor = 0;
 
-    for (int r1 = 0; r1 < (int)solucao.rotas.size(); r1++) {
-        for (int r2 = 0; r2 < (int)solucao.rotas.size(); r2++) {
-            if (r1 == r2) continue;
-
+    for (int r1 = 0; r1 < solucao.rotas.size(); r1++) {
+        for (int r2 = 0; r2 < solucao.rotas.size(); r2++) {
+            if (r1 == r2)
+                 continue;
+           
             Rota &rota1 = solucao.rotas[r1];
             Rota &rota2 = solucao.rotas[r2];
 
-            int L1 = rota1.caminho.size();
-            int L2 = rota2.caminho.size();
-                if (L1 <= 3) 
+            // int L1 = rota1.caminho.size();
+            // int L2 = rota2.caminho.size();
+
+                if (rota1.caminho.size() <= 3) 
                  continue; 
 
-            for (int i = 1; i < L1 - 1; i++) {
+            for (int i = 1; i < rota1.caminho.size() - 1; i++) {
                 int A = rota1.caminho[i - 1];
                 int B = rota1.caminho[i];
                 int C = rota1.caminho[i + 1];
 
                 int valor_removido = c[A][C] - (c[A][B] + c[B][C]);
-                std::cout << "\n[Relocate] Testando cliente " << B
-                          << " da rota " << r1 << " (pos=" << i << ")\n";
-                std::cout << "  deltaRemove = " << valor_removido << "\n";
+                // std::cout << "\n[Relocate] Testando cliente " << B
+                //           << " da rota " << r1 << " (pos=" << i << ")\n";
+                // std::cout << "  deltaRemove = " << valor_removido << "\n";
 
-                for (int j = 0; j < L2 - 1; j++) {
+                for (int j = 0; j < rota2.caminho.size() - 1; j++) {
                     int X = rota2.caminho[j];
                     int Y = rota2.caminho[j + 1];
 
                     int valor_inserido = (c[X][B] + c[B][Y]) - c[X][Y];
                     int novo_valor = valor_removido + valor_inserido;
 
-                    std::cout << "    Inserindo entre (" << X << "," << Y
-                              << ") da rota " << r2
-                              << " -> deltaInsert=" << valor_inserido
-                              << " deltaTotal=" << novo_valor;
+                    // std::cout << "    Inserindo entre (" << X << "," << Y
+                    //           << ") da rota " << r2
+                    //           << " -> deltaInsert=" << valor_inserido
+                    //           << " deltaTotal=" << novo_valor;
 
                     if (novo_valor >= 0) {
-                        std::cout << " [descartado: não melhora]\n";
+                        // std::cout << " [descartado: não melhora]\n";
                         continue;
                     }
 
@@ -430,61 +334,150 @@ bool aplicarRelocate(Resultado& solucao,const vector<int>& d, const vector<vecto
                     rota1.caminho.erase(rota1.caminho.begin() + i);
                     rota2.caminho.insert(rota2.caminho.begin() + (j + 1), cliente);
 
-                    bool ok = validaRota(rota1, d, Q) && validaRota(rota2, d, Q);
 
-                   
-                    // rollback
+                    if(validaRota(rota1, d, Q) && validaRota(rota2, d, Q)){
+                         if (novo_valor < melhorValor) {
+                        // std::cout << " **novo melhor movimento**";
+                            melhorValor = novo_valor;
+                            melhor_r1 = r1; 
+                            melhor_i = i;
+                            melhor_r2 = r2; 
+                            melhor_j = j;
+                     }
+
+                    }
+
                     rota2.caminho.erase(rota2.caminho.begin() + (j + 1));
                     rota1.caminho.insert(rota1.caminho.begin() + i, cliente);
-
-                    if (!ok) {
-                        std::cout << " [inválido]\n";
-                        continue;
-                    }
-
-                    std::cout << " [VÁLIDO]";
-                    if (novo_valor < melhorValor) {
-                        std::cout << " **novo melhor movimento**";
-                        melhorValor = novo_valor;
-                        melhor_r1 = r1; melhor_i = i;
-                        melhor_r2 = r2; melhor_j = j;
-                    }
-                    std::cout << "\n";
                 }
             }
         }
     }
 
     if (melhor_r1 != -1) {
-        Rota &rOrig = solucao.rotas[melhor_r1];
-        Rota &rDest = solucao.rotas[melhor_r2];
+        Rota &rota_origem = solucao.rotas[melhor_r1];
+        Rota &rota_destino = solucao.rotas[melhor_r2];
 
-        int A = rOrig.caminho[melhor_i - 1];
-        int B = rOrig.caminho[melhor_i];
-        int C = rOrig.caminho[melhor_i + 1];
+        int A = rota_origem.caminho[melhor_i - 1];
+        int B = rota_origem.caminho[melhor_i];
+        int C = rota_origem.caminho[melhor_i + 1];
 
-        int X = rDest.caminho[melhor_j];
-        int Y = rDest.caminho[melhor_j + 1];
+        int X = rota_destino.caminho[melhor_j];
+        int Y = rota_destino.caminho[melhor_j + 1];
 
         int valor_removido = c[A][C] - (c[A][B] + c[B][C]);
         int valor_inserido = (c[X][B] + c[B][Y]) - c[X][Y];
         int novo_valor = valor_removido + valor_inserido;
 
-        std::cout << "\n[Relocate] >>> Aplicando movimento final: cliente "
-                  << B << " da rota " << melhor_i << " -> rota " << melhor_j
-                  << " entre (" << X << "," << Y << ")"
-                  << " | deltaFinal=" << novo_valor << "\n";
+        // std::cout << "\n[Relocate] >>> Aplicando movimento final: cliente "
+        //           << B << " da rota " << melhor_i << " -> rota " << melhor_j
+        //           << " entre (" << X << "," << Y << ")"
+        //           << " | deltaFinal=" << novo_valor << "\n";
 
-        rOrig.caminho.erase(rOrig.caminho.begin() + melhor_i);
-        rDest.caminho.insert(rDest.caminho.begin() + (melhor_j + 1), B);
+        rota_origem.caminho.erase(rota_origem.caminho.begin() + melhor_i);
+        rota_destino.caminho.insert(rota_destino.caminho.begin() + (melhor_j + 1), B);
 
-        rOrig.custo += valor_removido;
-        rDest.custo += valor_inserido;
+        rota_origem.custo += valor_removido;
+        rota_destino.custo += valor_inserido;
         solucao.custoFinal += novo_valor;
 
         return true;
     }
 
-    std::cout << "\n[Relocate] Nenhuma melhoria encontrada.\n";
+    // std::cout << "\n[Relocate] Nenhuma melhoria encontrada.\n";
     return false;
+}
+
+bool aplicarRelocate(Resultado& solucao, const vector<int>& d, const vector<vector<int>>& c,int Q){
+    int melhor_r = -1;         
+    int melhor_i = -1;         
+    int melhor_j = -1;      
+    int melhorValor = 0;   
+
+    for (int r = 0; r < (int)solucao.rotas.size(); ++r) {
+        Rota &rota = solucao.rotas[r];
+        const int L = (int)rota.caminho.size();
+        if (L <= 3) continue;  // 0-X-0: não há para onde reposicionar
+
+        // para cada cliente B na rota 
+        for (int i = 1; i < L - 1; ++i) {
+            int A = rota.caminho[i - 1];
+            int B = rota.caminho[i];
+            int C = rota.caminho[i + 1];
+
+            
+            int deltaRemove = c[A][C] - (c[A][B] + c[B][C]);
+
+            for (int j = 0; j < L - 1; j++) {
+                
+                if (j == i || j == i - 1)
+                 continue;
+
+                int X = rota.caminho[j];
+                int Y = rota.caminho[j + 1];
+
+                // custo de INSERIR B entre (X-Y): (X-Y) -> (X-B-Y)
+                int deltaInsert = (c[X][B] + c[B][Y]) - c[X][Y];
+                int novo_valor  = deltaRemove + deltaInsert; // delta total
+
+                if (novo_valor >= 0) 
+                    continue; // só melhorias estritas
+
+                // ---- aplica temporário para validar ----
+                // após remover i, o índice de inserção muda se j > i
+                int posIns;
+
+                if (j < i)
+                    posIns = j + 1;
+                else
+                    posIns = j;
+
+                rota.caminho.erase(rota.caminho.begin() + i);
+                rota.caminho.insert(rota.caminho.begin() + posIns, B);
+
+                bool ok = validaRota(rota, d, Q);
+
+                // rollback
+                rota.caminho.erase(rota.caminho.begin() + posIns);
+                rota.caminho.insert(rota.caminho.begin() + i, B);
+
+                if (!ok) continue;
+
+                if (novo_valor < melhorValor) {
+                    melhorValor = novo_valor;
+                    melhor_r = r;
+                    melhor_i = i;
+                    melhor_j = j;
+                }
+            }
+        }
+    }
+
+    // aplica melhor movimento encontrado
+    if (melhor_r != -1) {
+        Rota &rota = solucao.rotas[melhor_r];
+
+        int A = rota.caminho[melhor_i - 1];
+        int B = rota.caminho[melhor_i];
+        int C = rota.caminho[melhor_i + 1];
+
+        int X = rota.caminho[melhor_j];
+        int Y = rota.caminho[melhor_j + 1];
+
+        int deltaRemove = c[A][C] - (c[A][B] + c[B][C]);
+        int deltaInsert = (c[X][B] + c[B][Y]) - c[X][Y];
+        int novo_valor  = deltaRemove + deltaInsert; // < 0
+
+        int posIns = (melhor_j < melhor_i ? melhor_j + 1 : melhor_j);
+        rota.caminho.erase(rota.caminho.begin() + melhor_i);
+        rota.caminho.insert(rota.caminho.begin() + posIns, B);
+
+        // atualiza custos incrementalmente
+        rota.custo += novo_valor;
+        solucao.custoFinal += novo_valor;
+
+        return true;
+    }
+
+    return false; // nenhuma melhoria
 }

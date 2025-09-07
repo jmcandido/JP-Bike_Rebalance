@@ -35,21 +35,24 @@ int main(int argc, char* argv[]) {
     //vnd
 
     int k = 1;
-    int vizinhancas = 3; 
+    int vizinhancas = 4; 
 
     while (k <= vizinhancas) {
         bool melhorou = false;
 
-        cout << "k = " << k << endl;
+        //cout << "k = " << k << endl;
 
         switch (k) {
             case 1:
                 melhorou = aplicarSwap(solucao, d, c, Q); 
                 break;
             case 2:
-                melhorou = aplicarRelocate(solucao, d, c, Q);
+                melhorou = aplicarRelocate(solucao,d,c,Q);
                 break;
             case 3:
+                melhorou = aplicarRelocateInter(solucao, d, c, Q);
+                break;
+            case 4:
                 melhorou = aplicarSwapInterRotas(solucao,d,c,Q);
                 break;
         }
