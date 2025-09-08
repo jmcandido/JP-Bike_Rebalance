@@ -1,6 +1,7 @@
 #include "resultados.h"
 #include "guloso.h"
 #include "vnd.h"
+#include "grasp.h"
 #include <chrono>
 
 int main(int argc, char* argv[]) {
@@ -32,38 +33,7 @@ int main(int argc, char* argv[]) {
     gravaResultado("resultados/guloso",instancia,solucao);
     imprimirResultado(solucao);    
 
-    //vnd
-
-    int k = 1;
-    int vizinhancas = 4; 
-
-    while (k <= vizinhancas) {
-        bool melhorou = false;
-
-        //cout << "k = " << k << endl;
-
-        switch (k) {
-            case 1:
-                melhorou = aplicarSwapGeral(solucao, d, c, Q); 
-                break;
-            case 2:
-                melhorou = aplicarRelocate(solucao,d,c,Q);
-                break;
-            case 3:
-                melhorou = aplicarRelocateInter(solucao, d, c, Q);
-                break;
-            case 4:
-                melhorou = aplicarSwapInterRotasGeral(solucao,d,c,Q);
-                break;
-        }
-
-        if (melhorou) {
-            //cout << "Melhoria encontrada na vizinhança " << k << endl;
-            k = 1; // volta para a primeira vizinhança
-        } else {
-            k++;   // vai para a próxima vizinhança 17440 ms   1241
-        }
-    }
+    VND(solucao,d,c,Q);
 
     cout << "\nSolução após VND:" << endl;
     imprimirResultado(solucao);

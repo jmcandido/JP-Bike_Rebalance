@@ -2,6 +2,36 @@
 #include "resultados.h"
 #include <algorithm>
 
+void VND(Resultado& solucao, const vector<int>& d,const vector<vector<int>>& c,int Q) {
+    int k = 1;
+    int vizinhancas = 4; 
+
+    while (k <= vizinhancas) {
+        bool melhorou = false;
+
+        switch (k) {
+            case 1:
+                melhorou = aplicarSwapGeral(solucao, d, c, Q); 
+                break;
+            case 2:
+                melhorou = aplicarRelocate(solucao, d, c, Q);
+                break;
+            case 3:
+                melhorou = aplicarRelocateInter(solucao, d, c, Q);
+                break;
+            case 4:
+                melhorou = aplicarSwapInterRotasGeral(solucao, d, c, Q);
+                break;
+        }
+
+        if (melhorou) {
+            k = 1; // volta para a primeira vizinhança
+        } else {
+            k++;   // vai para a próxima vizinhança
+        }
+    }
+}
+
 bool aplicarSwapInterRotas(Resultado &solucao, const vector<int> &d, const vector<vector<int>> &c, int Q){
 
     bool melhorou = false;

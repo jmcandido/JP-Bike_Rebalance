@@ -51,7 +51,6 @@ bool construirRota(int n, int Q, const vector<int>& d,const vector<vector<int>>&
         visitado[prox] = true;
         naoVisitados--;
         atual = prox;
-   
     }
 
     // fecha rota no depósito, se tiver clientes
@@ -63,7 +62,6 @@ bool construirRota(int n, int Q, const vector<int>& d,const vector<vector<int>>&
 
     return false;
 }
-
 
 Resultado guloso(int n, int m, int Q, const vector<int>& d,const vector<vector<int>>& c) {
                     
