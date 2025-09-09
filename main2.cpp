@@ -9,9 +9,8 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    // Uso: ./programa instancia.txt [alpha] [iteracoes]
-    if (argc < 2) {
-        cerr << "Uso: " << argv[0] << " instancia.txt [alpha=0.35] [iteracoes=30]\n";
+    if (argc < 4) {
+        cerr << "Uso: " << argv[0] << " instancia.txt alpha iteracoes" << endl;
         return -1;
     }
 
@@ -31,29 +30,26 @@ int main(int argc, char* argv[]) {
 
     auto inicio = chrono::high_resolution_clock::now();
 
+
+    Resultado solucao = guloso(n, m, Q, d, c);
+    cout << "Solução inicial:" << endl;
+    imprimirResultado(solucao);
+    gravaResultado("resultados/guloso",instancia,solucao);
+    
+
+    VND(solucao,d,c,Q);
+    cout << "\nSolução após VND:" << endl;
+    imprimirResultado(solucao);
+    gravaResultado("resultados/vnd",instancia,solucao);
+    cout << endl;
+
     random_device rd;
     mt19937 rng(rd());
 
-    // Melhor solução global
-    Resultado melhor;
-    melhor.custoFinal = numeric_limits<int>::max();
+    Resultado melhor = GRASP(n, m, Q, d, c, alpha,qtd_iteracoes, rng);
 
-    for (int i = 0; i < qtd_iteracoes; i++) {
-        // Construção GRASP
-        Resultado sol = guloso_GRASP(n, m, Q, d, c, alpha, rng);
-        imprimirResultado(sol);
-        
-        VND(sol, d, c, Q);
-
-        //Atualiza melhor solução
-        if (!sol.rotas.empty() && sol.custoFinal < melhor.custoFinal) {
-            melhor = sol;
-        }
-    }
-
-    std::cout << "Solução inicial (melhor entre " << qtd_iteracoes << " iterações GRASP+VND):\n";
     imprimirResultado(melhor);
-    gravaResultado("resultados/vnd", instancia, melhor);   // salva a melhor pós-VND
+    gravaResultado("resultados/grasp", instancia, melhor); 
 
     auto fim = chrono::high_resolution_clock::now();
     auto duracao = chrono::duration_cast<chrono::milliseconds>(fim - inicio);

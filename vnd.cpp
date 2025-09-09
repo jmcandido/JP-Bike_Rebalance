@@ -276,7 +276,7 @@ bool aplicarSwapGeral(Resultado &solucao, const vector<int> &d, const vector<vec
     {
         Rota &rota = solucao.rotas[r];
 
-        if (rota.caminho.size() > 3)
+        if (rota.caminho.size() > 2)
         { // 0-X-0 não há o que trocar
             for (int i = 1; i < rota.caminho.size() - 2; i++)
             {
@@ -513,8 +513,7 @@ bool aplicarRelocate(Resultado &solucao, const vector<int> &d, const vector<vect
     }
 
     // aplica melhor movimento encontrado
-    if (melhor_r != -1)
-    {
+    if (melhor_r != -1){
         Rota &rota = solucao.rotas[melhor_r];
 
         int A = rota.caminho[melhor_i - 1];

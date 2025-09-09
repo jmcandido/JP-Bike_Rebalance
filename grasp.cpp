@@ -1,8 +1,5 @@
 #include "grasp.h"
-#include <limits>
-#include <algorithm>
-#include <random>
-#include <climits>
+#include "vnd.h"
 
 
 // Escolhe via LCR usando somente índices de clientes
@@ -19,16 +16,21 @@ int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<st
     }
 
     double limite = gmin + alpha * (gmax - gmin);
-    cout << "gmin = " << gmin << endl;
-    cout << "gmax = " << gmax << endl;
-    cout << "alpha = " << alpha << endl;
-    cout << "Limite = " << limite << endl;
+    // cout << "gmin = " << gmin << endl;
+    // cout << "gmax = " << gmax << endl;
+    // cout << "alpha = " << alpha << endl;
+     cout << "Limite = " << limite << endl;
     vector<int> LCR;
 
     for (int v : viaveis) {
         if (c[atual][v] <= limite)
             LCR.push_back(v);
     }
+
+    for(int i = 0; i < LCR.size();i++){
+        cout << LCR[i] << " ";
+    }
+    cout << endl;
 
     int proximo = LCR[ rng() % LCR.size() ];
     
@@ -45,9 +47,8 @@ bool construirRota_GRASP(int n, int Q,
                          std::mt19937& rng) {
 
     rota.custo = 0;
-    rota.caminho.clear();
-    rota.caminho.push_back(0); // 0 = depósito
-    std::vector<int> cand_viaveis;
+    rota.caminho.push_back(0); 
+    vector<int> cand_viaveis;
 
     int atual = 0;
 
@@ -103,4 +104,35 @@ Resultado guloso_GRASP(int n, int m, int Q,
         } 
     }
     return res;
+}
+
+
+Resultado GRASP(int n, int m, int Q,const std::vector<int>& d,const std::vector<std::vector<int>>& c,double alpha,int qtd_iteracoes,std::mt19937& rng){
+    
+    Resultado melhor;
+    melhor.custoFinal = std::numeric_limits<int>::max();
+
+    for (int i = 0; i < qtd_iteracoes; ++i) {
+        // Construção GRASP
+        std::cout << "Melhor solucao: " << melhor.custoFinal << '\n';
+        Resultado sol = guloso_GRASP(n, m, Q, d, c, alpha, rng);
+
+        std::cout << "Solucao Inicial Grasp: ";
+        imprimirResultado(sol);
+        std::cout << '\n';
+
+        // Busca local
+        VND(sol, d, c, Q);
+
+        std::cout << "Solucao Vnd pos Grasp: ";
+        imprimirResultado(sol);
+        std::cout << '\n';
+
+        // Atualiza melhor solução
+        if (sol.custoFinal < melhor.custoFinal) {
+            melhor = std::move(sol); 
+        }
+    }
+
+    return melhor;
 }

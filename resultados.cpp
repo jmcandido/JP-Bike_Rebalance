@@ -36,7 +36,7 @@ bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, vector<int>
     arquivo << res.rotas.size() << endl;
 
     // grava cada rota
-    for (const auto& r : res.rotas) {
+    for (const Rota& r : res.rotas) {
         for (int i = 0; i < (int)r.caminho.size(); i++) {
             arquivo << r.caminho[i] << (i + 1 < (int)r.caminho.size() ? ' ' : '\n');
         }
@@ -79,8 +79,12 @@ void imprimirResultado(const Resultado& res) {
     cout << res.custoFinal << endl;
     cout << res.rotas.size() << endl;
     for (const Rota &r : res.rotas) {
+        
         for (int i = 0; i < (int)r.caminho.size(); i++) {
-            cout << r.caminho[i] << (i+1 < r.caminho.size() ? ' ' : '\n');
+            if(r.caminho.size() > 2){
+                cout << r.caminho[i] << (i+1 < r.caminho.size() ? ' ' : '\n');
+            }
+            
         }
     }
 }
