@@ -6,10 +6,8 @@
 
 void VND(Resultado& sol, const vector<int>& d, const vector<vector<int>>& c, int Q);
 
-bool aplicarSwap(Resultado& solucao, const vector<int>& d, const vector<std::vector<int>>& c,int Q);
 bool aplicarSwapGeral(Resultado& solucao, const vector<int>& d,const vector<vector<int>>& c, int Q);
 
-bool aplicarSwapInterRotas(Resultado& solucao,const vector<int>& d,const vector<vector<int>>& c,int Q);
 bool aplicarSwapInterRotasGeral(Resultado& solucao,const vector<int>& d,const vector<vector<int>>& c, int Q);
 
 bool aplicarRelocateInter(Resultado& solucao,const vector<int>& d, const vector<vector<int>>& c,int Q);

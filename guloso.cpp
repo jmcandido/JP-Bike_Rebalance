@@ -15,53 +15,65 @@ int escolherVizinhoMaisProximo(int atual, const vector<int>& candidatos_viaveis,
     return melhor;
 }
 
-bool construirRota(int n, int Q, const vector<int>& d,const vector<vector<int>>& c, vector<bool>& visitado,int &naoVisitados, Rota &rota) {
+Rota construirRota(int n, int Q,
+                         const vector<int>& d,
+                         const vector<vector<int>>& c,
+                         vector<bool>& visitado,
+                         int& naoVisitados) {
     
+    Rota rota;                        
     rota.custo = 0;
-    rota.caminho.push_back(0); // começa no depósito
-    vector<int> candidatos_viaveis;
+    rota.caminho.push_back(0); 
+
+    vector<int> cand_viaveis;
     int atual = 0;
-    while (true) { 
-       
-        candidatos_viaveis.clear();
 
-        // monta lista de candidatos viáveis
+    // acumuladores incrementais
+    int cargaAtual = 0;
+    int minCarga = 0;
+    int maxCarga = 0;
+
+    while (true) {
+        cand_viaveis.clear();
+
+        // monta lista de candidatos viáveis incrementalmente
         for (int i = 1; i <= n; i++) {
-            if (!visitado[i]){
-                
-                rota.caminho.push_back(i);
+            if (!visitado[i]) {
+               int novaCarga = cargaAtual + d[i];
+               
+               int novoMin = min(minCarga, novaCarga);
+               int novoMax = max(maxCarga, novaCarga);
 
-                if(validaRota(rota, d, Q)){
-                    candidatos_viaveis.push_back(i);
-                }
-
-                rota.caminho.pop_back();
-            } 
+                if (-novoMin <= Q - novoMax) 
+                    cand_viaveis.push_back(i);
+            }
         }
 
-        if (candidatos_viaveis.empty())
-             break;
+        if (cand_viaveis.empty())
+            break;
 
-        // escolhe o vizinho mais próximo entre os viáveis
-        int prox = escolherVizinhoMaisProximo(atual, candidatos_viaveis, c);
+        // escolha via GRASP
+        int prox = escolherVizinhoMaisProximo(atual,cand_viaveis,c);
 
-        // adiciona o cliente escolhido
+        // adiciona cliente escolhido
         rota.caminho.push_back(prox);
         rota.custo += c[atual][prox];
         visitado[prox] = true;
         naoVisitados--;
+
+        // atualiza acumuladores incrementais
+        cargaAtual += d[prox];
+        minCarga = min(minCarga, cargaAtual);
+        maxCarga = max(maxCarga, cargaAtual);
         atual = prox;
     }
 
-    // fecha rota no depósito, se tiver clientes
-    if (rota.caminho.size() > 1) {
-        rota.caminho.push_back(0);
-        rota.custo += c[atual][0];
-        return true;
-    }
-
-    return false;
+    // fecha rota
+    rota.caminho.push_back(0);
+    rota.custo += c[atual][0];
+    return rota;
 }
+
 
 Resultado guloso(int n, int m, int Q, const vector<int>& d,const vector<vector<int>>& c) {
                     
@@ -71,20 +83,19 @@ Resultado guloso(int n, int m, int Q, const vector<int>& d,const vector<vector<i
     int naoVisitados = n;
 
     for (int i = 0; i < m && naoVisitados > 0; i++) {
-        Rota rota;
 
-        if (construirRota(n, Q, d, c, visitado, naoVisitados, rota)) {
-            res.rotas.push_back(rota);
-            res.custoFinal += rota.custo;
-        }
+        Rota rota = construirRota(n, Q, d, c, visitado, naoVisitados);
+        res.rotas.push_back(rota);
+        res.custoFinal += rota.custo;
+        
     }
 
-    // if (naoVisitados > 0) {
-    //     for (int i = 1; i <= n; i++) {
-    //         if (!visitado[i]) cout << i << " ";
-    //     }
-    //     cout << endl;
-    // }
+    if (naoVisitados > 0) {
+        for (int i = 1; i <= n; i++) {
+            if (!visitado[i]) cout << i << " ";
+        }
+        cout << endl;
+    }
     
     return res;
 }

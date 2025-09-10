@@ -2,48 +2,46 @@
 #include "guloso.h"
 #include "vnd.h"
 #include "grasp.h"
+
 #include <chrono>
+#include <random>
+#include <limits>
+#include <iostream>
 
 int main(int argc, char* argv[]) {
-
-    if (argc < 2) {
+    if (argc < 4) {
+        cerr << "Uso: " << argv[0] << " instancia.txt alpha iteracoes" << endl;
         return -1;
     }
 
     string instancia = argv[1];
 
+    double alpha = stod(argv[2]);         
+    int qtd_iteracoes = stoi(argv[3]);           
+
     int n, m, Q;
     vector<int> d;
     vector<vector<int>> c;
 
-
-    // leitura da instância
     if (!lerInstancia(instancia, n, m, Q, d, c)) {
-        cerr << "Erro ao abrir instancia!\n";
+        std::cerr << "Erro ao abrir instancia!\n";
         return -1;
     }
 
-     auto inicio = std::chrono::high_resolution_clock::now();
+    auto inicio = chrono::high_resolution_clock::now();
 
 
-    // solução inicial 
-    Resultado solucao = guloso(n, m, Q, d, c);
+    random_device rd;
+    mt19937 rng(rd());
 
-    cout << "Solução inicial:" << endl;
-    gravaResultado("resultados/guloso",instancia,solucao);
-    imprimirResultado(solucao);    
+    Resultado melhor = GRASP(n, m, Q, d, c, alpha,qtd_iteracoes, rng);
 
-    VND(solucao,d,c,Q);
+    imprimirResultado(melhor);
+    gravaResultado("resultados/grasp", instancia, melhor); 
 
-    cout << "\nSolução após VND:" << endl;
-    imprimirResultado(solucao);
-    gravaResultado("resultados/vnd",instancia, solucao);
-
-    auto fim = std::chrono::high_resolution_clock::now();
-
-    // calcula duração em ms
-    auto duracao = std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio);
-    cout << "\nTempo total de execução: " << duracao.count() << " ms" << endl;
+    auto fim = chrono::high_resolution_clock::now();
+    auto duracao = chrono::duration_cast<chrono::milliseconds>(fim - inicio);
+    std::cout << "\nTempo total de execução: " << duracao.count() << " ms\n";
 
     return 0;
 }
