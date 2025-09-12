@@ -72,9 +72,9 @@ void gravaResultado(const string& pasta, const string& instancia, const Resultad
     // grava apenas as rotas com pelo menos 1 cliente
     for (const Rota& r : res.rotas) {
         if (r.caminho.size() > 2) {
-            for (int i = 0; i < (int)r.caminho.size(); i++) {
+            for (int i = 0; i < r.caminho.size(); i++) {
                 arquivo << r.caminho[i]
-                        << (i + 1 < (int)r.caminho.size() ? ' ' : '\n');
+                        << (i + 1 < r.caminho.size() ? ' ' : '\n');
             }
         }
     }
@@ -84,14 +84,14 @@ void gravaResultado(const string& pasta, const string& instancia, const Resultad
 
 
 
-// Recalcula o custo de uma rota
-int custoRota(const Rota& r, const vector<vector<int>>& c) {
-    int custo = 0;
-    for (int i = 0; i + 1 < r.caminho.size(); i++) {
-        custo += c[r.caminho[i]][r.caminho[i+1]];
-    }
-    return custo;
-}
+// // Recalcula o custo de uma rota
+// int custoRota(const Rota& r, const vector<vector<int>>& c) {
+//     int custo = 0;
+//     for (int i = 0; i + 1 < r.caminho.size(); i++) {
+//         custo += c[r.caminho[i]][r.caminho[i+1]];
+//     }
+//     return custo;
+// }
 
 bool validaRota(const Rota& r, const vector<int>& d, int Q) {
     int demandas_acumuladas = 0;
@@ -116,14 +116,22 @@ bool validaRota(const Rota& r, const vector<int>& d, int Q) {
 
 void imprimirResultado(const Resultado& res) {
     cout << res.custoFinal << endl;
-    cout << res.rotas.size() << endl;
+
+    int qtdRotasValidas = 0;
+
+    for (const Rota& r : res.rotas) {
+        if (r.caminho.size() > 2) {
+            qtdRotasValidas++;
+        }
+    }
+
+    cout << qtdRotasValidas << endl;
+
     for (const Rota &r : res.rotas) {
-        
         for (int i = 0; i < (int)r.caminho.size(); i++) {
-            if(r.caminho.size() > 2){
-                cout << r.caminho[i] << (i+1 < r.caminho.size() ? ' ' : '\n');
-            }
-            
+                if (r.caminho.size() > 2){
+                    cout << r.caminho[i] << (i+1 < r.caminho.size() ? ' ' : '\n');
+                }
         }
     }
 }

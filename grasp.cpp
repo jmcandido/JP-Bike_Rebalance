@@ -3,23 +3,24 @@
 
 
 // Escolhe via LCR usando somente índices de clientes
-int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<std::vector<int>>& c,double alpha,std::mt19937& rng) {
+int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<std::vector<int>>& c,double alpha,std::mt19937& rng, int gmin, int gmax) {
 
-    int gmin = INT_MAX;  // “+infinito” para começar
-    int gmax = INT_MIN;  // “-infinito” para começar
-    int g;
+    // int gmin = INT_MAX;  // “+infinito” para começar
+    // int gmax = INT_MIN;  // “-infinito” para começar
+    // int g;
 
-    for (int v : viaveis) {
-        g = c[atual][v];       
-        gmin = min(gmin, g);
-        gmax = max(gmax, g);
-    }
+    // for (int v : viaveis) {
+    //     g = c[atual][v];       
+    //     gmin = min(gmin, g);
+    //     gmax = max(gmax, g);
+    // }
 
     double limite = gmin + alpha * (gmax - gmin);
-    // cout << "gmin = " << gmin << endl;
-    // cout << "gmax = " << gmax << endl;
-    // cout << "alpha = " << alpha << endl;
-    // cout << "Limite = " << limite << endl;
+    cout << "gmin = " << gmin << endl;
+    cout << "gmax = " << gmax << endl;
+    cout << "alpha = " << alpha << endl;
+    cout << "Limite = " << limite << endl;
+
     vector<int> LCR;
 
     for (int v : viaveis) {
@@ -27,12 +28,16 @@ int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<st
             LCR.push_back(v);
     }
 
-    // for(int i = 0; i < LCR.size();i++){
-    //     cout << LCR[i] << " ";
-    // }
-    // cout << endl;
+    for(int i = 0; i < LCR.size();i++){
+        cout << LCR[i] << " ";
+    }
+    
+    cout << endl;
 
-    int proximo = LCR[ rng() % LCR.size() ];
+    uniform_int_distribution<int> dist(0, LCR.size() - 1);
+
+    int proximo = LCR[dist(rng)];
+
     
     return proximo;
 }
@@ -52,24 +57,34 @@ Rota construirRota_GRASP(int n, int Q,
     std::vector<int> cand_viaveis;
     int atual = 0;
 
-    // acumuladores incrementais
     int cargaAtual = 0;
-    int minCarga = 0;
-    int maxCarga = 0;
+    int carga_minima = 0;
+    int carga_maxima = 0;
+    int g;
+    
 
     while (true) {
         cand_viaveis.clear();
 
-        // monta lista de candidatos viáveis incrementalmente
+        int gmin = INT_MAX;
+        int gmax = INT_MIN;
+
+        // monta lista de candidatos viáveis 
         for (int i = 1; i <= n; i++) {
             if (!visitado[i]) {
                int novaCarga = cargaAtual + d[i];
                
-                int novoMin = std::min(minCarga, novaCarga);
-                int novoMax = std::max(maxCarga, novaCarga);
+                int novoMin = min(carga_minima, novaCarga);
+                int novoMax = max(carga_maxima, novaCarga);
 
                 if (-novoMin <= Q - novoMax) {
                     cand_viaveis.push_back(i);
+                    g = c[atual][i];
+                    
+                    if(g < gmin) 
+                        gmin = g;
+                    if (g > gmax) 
+                        gmax = g;
                 }
 
             }
@@ -79,7 +94,7 @@ Rota construirRota_GRASP(int n, int Q,
             break;
 
         // escolha via GRASP
-        int prox = escolherGRASP(cand_viaveis, atual, c, alpha, rng);
+        int prox = escolherGRASP(cand_viaveis, atual, c, alpha, rng, gmin,gmax);
 
         // adiciona cliente escolhido
         rota.caminho.push_back(prox);
@@ -89,8 +104,8 @@ Rota construirRota_GRASP(int n, int Q,
 
         // atualiza acumuladores incrementais
         cargaAtual += d[prox];
-        minCarga = std::min(minCarga, cargaAtual);
-        maxCarga = std::max(maxCarga, cargaAtual);
+        carga_minima = std::min(carga_minima, cargaAtual);
+        carga_maxima = std::max(carga_maxima, cargaAtual);
         atual = prox;
     }
 
@@ -127,6 +142,8 @@ Resultado GRASP(int n, int m, int Q,const std::vector<int>& d,const std::vector<
     melhor.custoFinal = std::numeric_limits<int>::max();
 
     for (int i = 0; i < qtd_iteracoes; i++) {
+
+        cout << "i = " << i + 1 << endl;
         // Construção GRASP
         // std::cout << "Melhor solucao: " << melhor.custoFinal << '\n';
         S = guloso_GRASP(n, m, Q, d, c, alpha, rng);
@@ -138,9 +155,9 @@ Resultado GRASP(int n, int m, int Q,const std::vector<int>& d,const std::vector<
         // Busca local
         VND(S, d, c, Q);
 
-        // std::cout << "Solucao Vnd pos Grasp: ";
-        // imprimirResultado(S);
-        // std::cout << '\n';
+        std::cout << "Solucao Vnd pos Grasp: ";
+        imprimirResultado(S);
+        std::cout << '\n';
 
         // Atualiza melhor solução
         if (S.custoFinal < melhor.custoFinal) {

@@ -8,7 +8,7 @@ void VND(Resultado& solucao, const vector<int>& d,const vector<vector<int>>& c,i
 
     while (k <= vizinhancas) {
         bool melhorou = false;
-
+        //cout << "K = " << k << endl;
         switch (k) {
             case 1:
                 melhorou = aplicarRelocate(solucao, d, c, Q); 
@@ -25,6 +25,7 @@ void VND(Resultado& solucao, const vector<int>& d,const vector<vector<int>>& c,i
         }
 
         if (melhorou) {
+            // cout << "Melhorei" << endl;
             k = 1; // volta para a primeira vizinhança
         } else {
             k++;   // vai para a próxima vizinhança
@@ -212,7 +213,7 @@ bool aplicarSwapGeral(Resultado &solucao, const vector<int> &d, const vector<vec
 
 bool aplicarRelocateInter(Resultado &solucao, const vector<int> &d, const vector<vector<int>> &c, int Q){
 
-    cout << "RELOCATE" << endl;
+    // cout << "RELOCATE" << endl;
     int melhor_r1 = -1, melhor_i = -1;
     int melhor_r2 = -1, melhor_j = -1;
     int melhorValor = 0;
@@ -221,13 +222,13 @@ bool aplicarRelocateInter(Resultado &solucao, const vector<int> &d, const vector
 
         Rota &rota1 = solucao.rotas[r1];
 
-        cout << "Iteracao: " << r1 << endl;
+        //cout << "Iteracao: " << r1 << endl;
         
 
-        cout << endl;
+       // cout << endl;
 
         if(rota1.caminho.size() <= 2){
-            cout << "Não tem ninguem para retirar " << endl;
+            // cout << "Não tem ninguem para retirar " << endl;
             continue;
         }   
 
@@ -237,26 +238,26 @@ bool aplicarRelocateInter(Resultado &solucao, const vector<int> &d, const vector
                 
                 Rota &rota2 = solucao.rotas[r2];
 
-                    cout << "Comparando Rota: " << r1 + 1<< " com rota " << r2 + 1 << endl;
-                    cout << "R1: ";
+                    // cout << "Comparando Rota: " << r1 + 1<< " com rota " << r2 + 1 << endl;
+                    // cout << "R1: ";
 
-                    for(int estacao: rota1.caminho){
+                    // for(int estacao: rota1.caminho){
 
-                            cout << estacao << " ";
-                    }
+                    //         cout << estacao << " ";
+                    // }
                     
-                    cout << endl;
-                    cout << "R2: ";
+                    // cout << endl;
+                    // cout << "R2: ";
                     
-                    for(int estacao: rota2.caminho){
+                    // for(int estacao: rota2.caminho){
 
-                            cout << estacao << " ";
-                    }
+                    //         cout << estacao << " ";
+                    // }
                     
-                    cout << endl;
+                    // cout << endl;
 
                     for (int i = 1; i < rota1.caminho.size() - 1; i++){
-                        cout << "vou checar meu fi para i = "  << i << endl;
+                        //cout << "vou checar meu fi para i = "  << i << endl;
                         int A = rota1.caminho[i - 1];
                         int B = rota1.caminho[i];
                         int C = rota1.caminho[i + 1];
@@ -265,7 +266,7 @@ bool aplicarRelocateInter(Resultado &solucao, const vector<int> &d, const vector
                         - (c[rota1.caminho[i - 1]][rota1.caminho[i]] + c[rota1.caminho[i]][rota1.caminho[i + 1]]);
 
                         for (int j = 0; j < rota2.caminho.size() - 1; j++){
-                            cout << "vou checar meu fi para j = "  << j << endl;
+                            //cout << "vou checar meu fi para j = "  << j << endl;
                             int X = rota2.caminho[j];
                             int Y = rota2.caminho[j + 1];
 

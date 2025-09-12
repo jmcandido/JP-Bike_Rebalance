@@ -1,14 +1,8 @@
 
 #include "resultados.h"
-#include <vector>
-#include <random>
-#include <limits>
-#include <algorithm>
-#include <climits>
-
 using namespace std;
 
-int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<std::vector<int>>& c,double alpha,std::mt19937& rng);
+int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<std::vector<int>>& c,double alpha,std::mt19937& rng, int, int);
 
 Rota construirRota_GRASP(int n, int Q,
                          const std::vector<int>& d,

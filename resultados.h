@@ -4,6 +4,11 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <random>
+#include <limits>
+#include <algorithm>
+#include <climits>
+
 using namespace std;
 
 // Estruturas básicas
