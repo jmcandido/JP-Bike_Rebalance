@@ -5,21 +5,11 @@
 // Escolhe via LCR usando somente índices de clientes
 int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<std::vector<int>>& c,double alpha,std::mt19937& rng, int gmin, int gmax) {
 
-    // int gmin = INT_MAX;  // “+infinito” para começar
-    // int gmax = INT_MIN;  // “-infinito” para começar
-    // int g;
-
-    // for (int v : viaveis) {
-    //     g = c[atual][v];       
-    //     gmin = min(gmin, g);
-    //     gmax = max(gmax, g);
-    // }
-
     double limite = gmin + alpha * (gmax - gmin);
-    cout << "gmin = " << gmin << endl;
-    cout << "gmax = " << gmax << endl;
-    cout << "alpha = " << alpha << endl;
-    cout << "Limite = " << limite << endl;
+    // cout << "gmin = " << gmin << endl;
+    // cout << "gmax = " << gmax << endl;
+    // cout << "alpha = " << alpha << endl;
+    // cout << "Limite = " << limite << endl;
 
     vector<int> LCR;
 
@@ -28,15 +18,15 @@ int escolherGRASP(const std::vector<int>& viaveis,int atual,const std::vector<st
             LCR.push_back(v);
     }
 
-    for(int i = 0; i < LCR.size();i++){
-        cout << LCR[i] << " ";
-    }
+    // for(int i = 0; i < LCR.size();i++){
+    //     cout << LCR[i] << " ";
+    // }
     
-    cout << endl;
+    // cout << endl;
 
-    uniform_int_distribution<int> dist(0, LCR.size() - 1);
+    uniform_int_distribution<int> distribuicao(0, LCR.size() - 1); // limite inferior e superior
 
-    int proximo = LCR[dist(rng)];
+    int proximo = LCR[distribuicao(rng)]; //   ajusta para caber de 0 até o tamanho da lista
 
     
     return proximo;
@@ -143,7 +133,7 @@ Resultado GRASP(int n, int m, int Q,const std::vector<int>& d,const std::vector<
 
     for (int i = 0; i < qtd_iteracoes; i++) {
 
-        cout << "i = " << i + 1 << endl;
+        // cout << "i = " << i + 1 << endl;
         // Construção GRASP
         // std::cout << "Melhor solucao: " << melhor.custoFinal << '\n';
         S = guloso_GRASP(n, m, Q, d, c, alpha, rng);
