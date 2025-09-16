@@ -5,6 +5,7 @@
 #include "resultados.h"
 
 void VND(Resultado& sol, const vector<int>& d, const vector<vector<int>>& c, int Q);
+void RVND(Resultado& sol, const vector<int>& d, const vector<vector<int>>& c, int Q);
 
 bool aplicarSwapGeral(Resultado& solucao, const vector<int>& d,const vector<vector<int>>& c, int Q);
 

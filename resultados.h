@@ -15,7 +15,6 @@ using namespace std;
 struct Rota {
    vector<int> caminho;
    int custo = 0;
-   int id;
 };
 
 struct Resultado {
@@ -23,11 +22,11 @@ struct Resultado {
     vector<Rota> rotas;
 };
 
-bool lerInstancia(const std::string& nomeArquivo, int &n, int &m, int &Q,  std::vector<int>& d, std::vector<std::vector<int>>& c);
+bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q,  std::vector<int>& d, std::vector<std::vector<int>>& c);
 
 int custoRota(const Rota& r, const std::vector<std::vector<int>>& c);
 
-bool validaRota(const Rota& r, const std::vector<int>& d, int Q);
+bool validaRota(const Rota& r, const std::vector<int>& d, const int Q);
 
 void imprimirResultado(const Resultado& res);
 

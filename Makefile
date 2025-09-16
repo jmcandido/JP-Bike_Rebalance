@@ -9,7 +9,7 @@ TARGET = programa
 # Arquivos objeto gerados
 OBJS = main.o resultados.o vnd.o grasp.o
 
-# Regra principal: compila o executável
+# Regra principal
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
 

@@ -1,5 +1,4 @@
 #include "resultados.h"
-#include "guloso.h"
 #include "vnd.h"
 #include "grasp.h"
 
@@ -24,7 +23,7 @@ int main(int argc, char* argv[]) {
     vector<vector<int>> c;
 
     if (!lerInstancia(instancia, n, m, Q, d, c)) {
-        std::cerr << "Erro ao abrir instancia!\n";
+        cerr << "Erro ao abrir instancia!\n";
         return -1;
     }
 
@@ -34,10 +33,10 @@ int main(int argc, char* argv[]) {
     random_device rd;
     mt19937 rng(rd());
 
-    Resultado melhor = GRASP(n, m, Q, d, c, alpha,qtd_iteracoes, rng);
+    Resultado res = GRASP(n, m, Q, d, c, alpha,qtd_iteracoes);
 
-    imprimirResultado(melhor);
-    gravaResultado("resultados/grasp", instancia, melhor); 
+    imprimirResultado(res);
+    gravaResultado("resultados/grasp", instancia, res); 
 
     auto fim = chrono::high_resolution_clock::now();
     auto duracao = chrono::duration_cast<chrono::milliseconds>(fim - inicio);

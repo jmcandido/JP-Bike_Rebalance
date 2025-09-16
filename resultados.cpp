@@ -4,13 +4,16 @@
 // Lê instância do arquivo
 bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, vector<int>& d, vector<vector<int>>& c) {
     ifstream in(nomeArquivo);
-    if (!in) return false;
+    if (!in) 
+    return false;
 
     in >> n >> m >> Q;
 
     d.resize(n + 1);
     d[0] = 0;
-    for (int i = 1; i <= n; i++) in >> d[i];
+
+    for (int i = 1; i <= n; i++) 
+    in >> d[i];
 
     c.resize(n + 1, vector<int>(n + 1));
     for (int i = 0; i <= n; i++)
@@ -19,32 +22,6 @@ bool lerInstancia(const string& nomeArquivo, int &n, int &m, int &Q, vector<int>
 
     return true;
 }
-// Grava solução em arquivo
-//  void gravaResultado(const string& pasta, const string& instancia, const Resultado& res) {
-//     // extrai só o nome-base da instância
-//     string nomeBase = instancia.substr(instancia.find_last_of("/\\") + 1);
-//     string caminho = pasta + "/" + nomeBase;
-
-//     ofstream arquivo(caminho);
-//     if (!arquivo.is_open()) {
-//         cout << "Erro ao abrir o arquivo para escrita." << endl;
-//         return;
-//     }
-
-//     // grava custos gerais
-//     arquivo << res.custoFinal << endl;
-//     arquivo << res.rotas.size() << endl;
-
-//     // grava cada rota
-//     for (const Rota& r : res.rotas) {
-//         for (int i = 0; i < (int)r.caminho.size(); i++) {
-//             arquivo << r.caminho[i] << (i + 1 < (int)r.caminho.size() ? ' ' : '\n');
-//         }
-//     }
-
-//     arquivo.close();
-// }
-
 
 void gravaResultado(const string& pasta, const string& instancia, const Resultado& res) {
     // extrai só o nome-base da instância
@@ -82,18 +59,16 @@ void gravaResultado(const string& pasta, const string& instancia, const Resultad
     arquivo.close();
 }
 
+// Recalcula o custo de uma rota
+int custoRota(const Rota& r, const vector<vector<int>>& c) {
+    int custo = 0;
+    for (int i = 0; i < r.caminho.size() - 1; i++) {
+        custo += c[r.caminho[i]][r.caminho[i+1]];
+    }
+    return custo;
+}
 
-
-// // Recalcula o custo de uma rota
-// int custoRota(const Rota& r, const vector<vector<int>>& c) {
-//     int custo = 0;
-//     for (int i = 0; i + 1 < r.caminho.size(); i++) {
-//         custo += c[r.caminho[i]][r.caminho[i+1]];
-//     }
-//     return custo;
-// }
-
-bool validaRota(const Rota& r, const vector<int>& d, int Q) {
+bool validaRota(const Rota& r, const vector<int>& d, const int Q) {
     int demandas_acumuladas = 0;
     int min_demanda = 0;
     int max_demanda = 0;
@@ -114,12 +89,13 @@ bool validaRota(const Rota& r, const vector<int>& d, int Q) {
 }
 // Imprime solução
 
+
 void imprimirResultado(const Resultado& res) {
     cout << res.custoFinal << endl;
 
     int qtdRotasValidas = 0;
 
-    for (const Rota& r : res.rotas) {
+    for (const Rota &r : res.rotas) {
         if (r.caminho.size() > 2) {
             qtdRotasValidas++;
         }
@@ -128,7 +104,7 @@ void imprimirResultado(const Resultado& res) {
     cout << qtdRotasValidas << endl;
 
     for (const Rota &r : res.rotas) {
-        for (int i = 0; i < (int)r.caminho.size(); i++) {
+        for (int i = 0; i < r.caminho.size(); i++) {
                 if (r.caminho.size() > 2){
                     cout << r.caminho[i] << (i+1 < r.caminho.size() ? ' ' : '\n');
                 }
