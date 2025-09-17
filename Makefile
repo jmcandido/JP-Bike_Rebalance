@@ -1,15 +1,13 @@
-# Compilador
+
 CXX = g++
-# Flags de compilação
+
 CXXFLAGS = -Wall -std=c++11
 
 # Nome do executável
 TARGET = programa
 
-# Arquivos objeto gerados
 OBJS = main.o resultados.o vnd.o grasp.o
 
-# Regra principal
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
 
