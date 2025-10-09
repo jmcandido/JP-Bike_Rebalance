@@ -30,6 +30,7 @@ Rota construirRota_GRASP(const int n, const int Q, const vector<int> &d, const v
     rota.caminho.push_back(0);
 
     int atual = 0;
+
     int cargaAtual = 0;
     int carga_minima = 0;
     int carga_maxima = 0;
@@ -46,10 +47,16 @@ Rota construirRota_GRASP(const int n, const int Q, const vector<int> &d, const v
         // monta lista de candidatos viáveis
         for (int i = 1; i <= n; i++){
             if (!visitado[i]){
+                
 
+                // Q = 10   
                 int novaCarga = cargaAtual + d[i];
                 int novoMin = min(carga_minima, novaCarga);
                 int novoMax = max(carga_maxima, novaCarga);
+
+                    //[10, 10]
+
+                    //[11,10]
 
                 if (-novoMin <= Q - novoMax){ // valida candidato
                     cand_viaveis.push_back(i);
@@ -74,7 +81,10 @@ Rota construirRota_GRASP(const int n, const int Q, const vector<int> &d, const v
         // atualiza acumuladores
         cargaAtual += d[prox];
         carga_minima = min(carga_minima, cargaAtual);
+            // MIN(0, -10) = -10
         carga_maxima = max(carga_maxima, cargaAtual);
+
+            // max(0, -10) = 0
         atual = prox;
     }
 
