@@ -1,3 +1,5 @@
+#ifndef GRASP_H
+#define GRASP_H
 
 #include "resultados.h"
 
@@ -22,3 +24,5 @@ Resultado GRASP(const int n, const int m, const int Q,
                              const vector<vector<int>>& c,
                              double alpha,
                              int qtd_iteracoes);
+
+#endif

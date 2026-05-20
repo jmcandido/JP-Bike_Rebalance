@@ -1,0 +1,8 @@
+*.o
+programa
+programa.exe
+servidor
+servidor.exe
+.DS_Store
+.build-tmp/
+*.log

@@ -1,17 +1,34 @@
-JP-Bike Rebalance 
+JP-Bike Rebalance
 
-Solucionador heurístico para o rebalanceamento de sistemas de bicicletas compartilhadas (variante de VRP com coleta/entrega em um único depósito), desenvolvido como projeto da disciplina Análise e Projeto de Algoritmos (UFPB/CI).
+Solucionador heuristico para rebalanceamento de sistemas de bicicletas compartilhadas, uma variante de VRP com coleta/entrega em um unico deposito.
 
-Cidades com bike-sharing precisam manter as estações balanceadas ao longo do dia. Nosso programa planeja rotas para uma frota de veículos que coletam/entregam bicicletas entre as estações, respeitando capacidade e minimizando o custo total percorrido. O modelo considera:
+O programa planeja rotas para uma frota de veiculos que coletam e entregam bicicletas entre estacoes, respeitando capacidade e minimizando o custo total percorrido.
 
-Um depósito (vértice 0) e n estações (1..n).
+Modelo considerado:
 
-Demandas q_i: positivas (doam bikes) e negativas (recebem bikes).
+- Vertice 0 como deposito e vertices 1..n como estacoes.
+- Demandas q_i positivas para estacoes que doam bikes e negativas para estacoes que recebem bikes.
+- m veiculos identicos com capacidade Q.
+- Custo c_ij em cada arco.
+- Cada estacao deve ser visitada exatamente uma vez.
+- A carga do veiculo nunca pode ser negativa nem exceder Q.
 
-m veículos idênticos com capacidade Q.
+## CLI
 
-Custo c_ij em cada arco (distância).
+```bash
+make programa
+./programa instancias/n12_q20.txt 0.35 120
+```
 
-Cada estação é visitada exatamente uma vez; veículos podem sair e retornar carregados; a carga no veículo nunca pode ser negativa nem exceder Q.
+## Interface web
 
+O projeto tambem possui uma camada web mantendo o backend em C++.
 
+```bash
+make servidor
+./servidor 8080
+```
+
+Depois acesse `http://localhost:8080`.
+
+A interface lista as instancias da pasta `instancias`, executa o GRASP/RVND no backend C++ e renderiza as rotas em um grafo no canvas. A visualizacao foi pensada para instancias pequenas, onde a leitura das rotas ainda e clara.

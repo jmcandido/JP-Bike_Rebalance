@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JP-Bike Rebalance</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <div>
+          <h1>JP-Bike</h1>
+          <p>Rebalance</p>
+        </div>
+      </div>
+
+      <form id="solver-form" class="panel">
+        <label>
+          Instancia
+          <select id="instance" required></select>
+        </label>
+
+        <label>
+          Alpha
+          <input id="alpha" type="range" min="0" max="1" step="0.05" value="0.35">
+          <output id="alpha-value">0.35</output>
+        </label>
+
+        <label>
+          Iteracoes
+          <input id="iterations" type="number" min="1" max="10000" value="120">
+        </label>
+
+        <button id="solve" type="submit">Resolver</button>
+      </form>
+
+      <section class="panel metrics">
+        <div>
+          <span>Custo</span>
+          <strong id="metric-cost">-</strong>
+        </div>
+        <div>
+          <span>Ref.</span>
+          <strong id="metric-reference">-</strong>
+        </div>
+        <div>
+          <span>Gap</span>
+          <strong id="metric-gap">-</strong>
+        </div>
+        <div>
+          <span>Rotas</span>
+          <strong id="metric-routes">-</strong>
+        </div>
+        <div>
+          <span>Tempo</span>
+          <strong id="metric-time">-</strong>
+        </div>
+      </section>
+
+      <section class="panel route-list">
+        <h2>Rotas</h2>
+        <div id="routes"></div>
+      </section>
+
+      <section class="panel load-panel hidden" id="load-panel">
+        <h2 id="load-title">Carga do veiculo</h2>
+        <div id="loads" class="load-content">
+          <span>Selecione uma rota para ver a evolucao da carga.</span>
+        </div>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <div class="toolbar">
+        <div>
+          <strong id="title">Selecione uma instancia</strong>
+          <span id="subtitle">O grafo aparece aqui depois da primeira execucao.</span>
+        </div>
+        <div class="toolbar-actions">
+          <button id="toggle-animation" type="button" aria-pressed="true">Pausar</button>
+          <button id="fit" type="button">Centralizar</button>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="graph" width="1200" height="800"></canvas>
+        <div id="empty-state" class="empty-state">
+          <strong>Visualizacao de rotas pequenas</strong>
+          <span>Execute o solver para renderizar as estacoes, demandas e caminhos dos veiculos.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
